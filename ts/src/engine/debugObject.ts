@@ -1,5 +1,6 @@
 import { GameObject, drawObject } from './gameObject.js'
 import { Engine, minMax } from './engine.js'
+import { Vector } from './vector.js'
 
 class DebugObject extends GameObject {
     lastTime: number = null;

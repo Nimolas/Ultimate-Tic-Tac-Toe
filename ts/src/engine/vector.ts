@@ -34,3 +34,5 @@ class Vector {
         return temp;
     }
 }
+
+export { Vector }

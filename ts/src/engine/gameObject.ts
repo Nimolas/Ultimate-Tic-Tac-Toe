@@ -1,4 +1,5 @@
 import { minMax, Engine } from './engine.js'
+import { Vector } from "./vector.js"
 
 interface drawObjectElement {
     drawPoints: Vector[],

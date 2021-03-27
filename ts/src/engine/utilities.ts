@@ -13,3 +13,5 @@ class Utilities {
         return list.splice(list.indexOf(element), 1)
     }
 }
+
+export { Utilities }

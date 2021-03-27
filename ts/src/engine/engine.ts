@@ -1,5 +1,7 @@
-import { IGame } from "../interfaces/iGame";
-import { DebugObject } from "./debugObject";
+import { IGame } from "../interfaces/iGame.js";
+import { DebugObject } from "./debugObject.js";
+import { Vector } from "./vector.js"
+import { Utilities } from "./utilities.js"
 
 interface minMax {
     min: Vector,
@@ -32,6 +34,7 @@ class Engine {
     }
 
     start() {
+        console.log("Engine started!")
         this.gameLoop(0);
     }
 

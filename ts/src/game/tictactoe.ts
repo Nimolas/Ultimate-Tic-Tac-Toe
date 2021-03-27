@@ -1,5 +1,5 @@
-import { GameObject } from "../engine/gameObject";
-import { IGame } from "../interfaces/iGame";
+import { GameObject } from "../engine/gameObject.js";
+import { IGame } from "../interfaces/iGame.js";
 
 class TicTacToe implements IGame {
     gameObjects: GameObject[];
@@ -16,3 +16,5 @@ class TicTacToe implements IGame {
         throw new Error("Method not implemented.");
     }
 }
+
+export { TicTacToe }

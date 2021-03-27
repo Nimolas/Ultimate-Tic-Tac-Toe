@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <canvas id="gameCanvas" width="200" height="100" style="border:1px solid #000000;">
+        Your browser does not support the canvas element.
+    </canvas>
+
+    <script type="module" src="ts/src/engine/engine.js"></script>
+    <script type="module" src="ts/src/game/tictactoe.js"></script>
+
+    <script>
+        let engine = new Engine();
+        engine.setGame(new TicTacToe());
+
+        engine.start();
+    </script>
+
+</body>
+
+</html>

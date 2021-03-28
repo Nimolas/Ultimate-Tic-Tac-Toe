@@ -11,7 +11,7 @@ class DebugObject extends GameObject {
         let xMidPosition = playableArea.min.x + ((playableArea.max.x - playableArea.min.x) / 2);
         let yMidPosition = playableArea.min.y + ((playableArea.max.y - playableArea.min.y) / 2);
 
-        let drawObject: drawObject = [
+        let drawObject: drawObject[] = [
             {
                 "drawPoints": [
                     new Vector(playableArea.min.x - 1, playableArea.min.y),
@@ -110,7 +110,7 @@ class DebugObject extends GameObject {
         Engine.context.closePath();
         this.setDrawModes("", "rgba(209, 49, 17, 0.45)"); //light red for object hitbox
 
-        Object.values(objectToDraw.drawObject).forEach(drawable => {
+        for (let drawable of objectToDraw.drawObjects) {
             let minObjGlobal = objectToDraw.toGlobalCoords(drawable.minMax.min);
             let maxObjGlobal = objectToDraw.toGlobalCoords(drawable.minMax.max);
 
@@ -123,7 +123,7 @@ class DebugObject extends GameObject {
 
             Engine.context.closePath();
             this.setDrawModes("", "rgba(102, 225, 0, 0.45)"); //light green for individual hitboxes
-        });
+        };
     }
 }
 

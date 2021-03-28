@@ -2,19 +2,29 @@ import { GameObject } from "../engine/gameObject.js";
 import { IGame } from "../interfaces/iGame.js";
 
 class TicTacToe implements IGame {
-    gameObjects: GameObject[];
+    gameObjects: GameObject[] = [];
     destructor(): void {
-        throw new Error("Method not implemented.");
+        for (let gameObject of this.gameObjects)
+            gameObject.destructor();
     }
+
     checkDelete(): void {
-        throw new Error("Method not implemented.");
+        for (let gameObject of this.gameObjects)
+            gameObject.checkDelete(this.gameObjects);
     }
+
     update(): void {
-        throw new Error("Method not implemented.");
+        for (let gameObject of this.gameObjects)
+            gameObject.update(this.gameObjects);
+
+        this.checkDelete();
     }
+
     draw(): void {
-        throw new Error("Method not implemented.");
+        for (let gameObject of this.gameObjects)
+            gameObject.draw();
     }
+
 }
 
 export { TicTacToe }

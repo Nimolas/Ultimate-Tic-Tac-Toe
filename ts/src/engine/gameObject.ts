@@ -1,19 +1,15 @@
 import { minMax, Engine } from './engine.js'
 import { Vector } from "./vector.js"
 
-interface drawObjectElement {
+interface drawObject {
     drawPoints: Vector[],
     fillColour: string,
     strokeColour: string,
     minMax?: minMax
 }
 
-interface drawObject {
-    [index: number]: drawObjectElement
-}
-
 class GameObject {
-    drawObject: drawObject = {};
+    drawObjects: drawObject[] = [];
     position: Vector = null;
     toDelete = false;
     minMax: minMax
@@ -23,13 +19,13 @@ class GameObject {
     }
 
     destructor() {
-        delete this.drawObject;
-        delete this.position;
-        delete this.minMax;
+        this.drawObjects = undefined;
+        this.position = undefined;
+        this.minMax = undefined;
     }
 
-    setDrawObject(drawObject: drawObject) {
-        this.drawObject = drawObject;
+    setDrawObject(drawObject: drawObject[]) {
+        this.drawObjects = drawObject;
         this.getObjectBounds();
     }
 
@@ -75,11 +71,11 @@ class GameObject {
     }
 
     assignIndividualObjectBounds() {
-        Object.values(this.drawObject).forEach(function (obj: drawObjectElement) {
-            let min = new Vector(1000000, 1000000);
-            let max = new Vector(-1000000, -1000000);
+        for (let drawObject of this.drawObjects) {
+            let min = new Vector(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+            let max = new Vector(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
 
-            obj.drawPoints.forEach(function (point: Vector) {
+            for (let point of drawObject.drawPoints) {
                 if (point.x < min.x)
                     min = new Vector(point.x, min.y)
                 if (point.y < min.y)
@@ -89,15 +85,15 @@ class GameObject {
                     max = new Vector(point.x, max.y)
                 if (point.y > max.y)
                     max = new Vector(max.x, point.y)
-            });
+            };
 
             let minMax = {
                 min: min,
                 max: max
             }
 
-            obj.minMax = minMax; //Assign each individual part of a drawObject's minMax
-        })
+            drawObject.minMax = minMax; //Assign each individual part of a drawObject's minMax
+        }
     }
 
     rotateAroundPoint(point: Vector, angle: number) {
@@ -112,16 +108,16 @@ class GameObject {
         let min = new Vector(1000000, 1000000);
         let max = new Vector(-1000000, -1000000);
 
-        Object.values(this.drawObject).forEach(obj => {
-            if (obj.minMax.max.x > max.x)
-                max = new Vector(obj.minMax.max.x, max.y)
-            if (obj.minMax.max.y > max.y)
-                max = new Vector(max.x, obj.minMax.max.y)
-            if (obj.minMax.min.x < min.x)
-                min = new Vector(obj.minMax.min.x, min.y)
-            if (obj.minMax.min.y < min.y)
-                min = new Vector(min.x, obj.minMax.min.y)
-        })
+        for (let drawObject of this.drawObjects) {
+            if (drawObject.minMax.max.x > max.x)
+                max = new Vector(drawObject.minMax.max.x, max.y)
+            if (drawObject.minMax.max.y > max.y)
+                max = new Vector(max.x, drawObject.minMax.max.y)
+            if (drawObject.minMax.min.x < min.x)
+                min = new Vector(drawObject.minMax.min.x, min.y)
+            if (drawObject.minMax.min.y < min.y)
+                min = new Vector(min.x, drawObject.minMax.min.y)
+        }
 
         let minMax = {
             min: min,
@@ -153,34 +149,34 @@ class GameObject {
     }
 
     drawByLine() {
-        Object.values(this.drawObject).forEach(drawable => {
+        for (let drawable of this.drawObjects) {
             Engine.context.beginPath();
             Engine.context.moveTo(this.toGlobalCoords(drawable.drawPoints[0]).x, this.toGlobalCoords(drawable.drawPoints[0]).y);
 
-            drawable.drawPoints.forEach(function (drawPoint: Vector) {
+            for (let drawPoint of drawable.drawPoints) {
                 if (drawPoint != drawable.drawPoints[0]) {
                     let drawPointGlobal = this.toGlobalCoords(drawPoint);
                     Engine.context.lineTo(drawPointGlobal.x, drawPointGlobal.y)
                 }
-            });
+            };
 
             Engine.context.closePath();
             this.setDrawModes(drawable.strokeColour, drawable.fillColour);
-        });
+        };
     }
 
     drawByPixel() {
-        Object.values(this.drawObject).forEach(drawable => {
+        for (let drawable of this.drawObjects) {
             Engine.context.beginPath();
 
-            drawable.drawPoints.forEach(function (drawPoint: Vector) {
+            for (let drawPoint of drawable.drawPoints) {
                 let drawPointGlobal = this.toGlobalCoords(drawPoint);
                 Engine.context.rect(drawPointGlobal.x, drawPointGlobal.y, 1, 1);
-            });
+            };
 
             Engine.context.closePath();
             this.setDrawModes(drawable.strokeColour, drawable.fillColour);
-        });
+        };
     }
 
     setDrawModes(strokeStyle: string, fillStyle: string) {

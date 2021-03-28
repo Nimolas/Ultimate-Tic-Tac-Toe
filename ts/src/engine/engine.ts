@@ -2,6 +2,7 @@ import { IGame } from "../interfaces/iGame.js";
 import { DebugObject } from "./debugObject.js";
 import { Vector } from "./vector.js"
 import { Utilities } from "./utilities.js"
+import { GameObject } from "./gameObject.js";
 
 interface minMax {
     min: Vector,
@@ -46,7 +47,7 @@ class Engine {
         Engine.keys = [];
 
         this.game.destructor();
-        delete this.game;
+        this.game = undefined;
     }
 
     static startCoRoutine(coRoutine: Generator) {
@@ -78,7 +79,8 @@ class Engine {
 
     drawDebug() {
         if (this.debug) {
-            this.game.gameObjects.forEach(gameObject => this.debugObject.drawObjectBounds(gameObject))
+            for (let gameObject of this.game.gameObjects)
+                this.debugObject.drawObjectBounds(gameObject)
             this.debugObject.draw();
         }
     }
@@ -96,10 +98,9 @@ class Engine {
     }
 
     executeCoRoutines() {
-        Engine.coRoutines.forEach(coRoutine => {
+        for (let coRoutine of Engine.coRoutines)
             if (coRoutine.next().done)
                 Utilities.removeElement(Engine.coRoutines, coRoutine)
-        })
     }
 
     gameLoop(timestamp: number) { //This is passed in by requestAnimationFrame. Is the time when the frame was called in relation to the start of the execution of the game in milliseconds
@@ -115,14 +116,13 @@ class Engine {
     }
 
     checkDebug() {
-        Engine.keys.forEach(key => {
+        for (let key of Engine.keys)
             switch (key) {
                 case "q":
                     this.debug = !this.debug; //toggle debug mode
                     Utilities.removeElement(Engine.keys, key); //delete the key from the list, so other things can't use it's value. Stops two things from using one press
                     break;
             }
-        })
     }
 
     setupEvents() {

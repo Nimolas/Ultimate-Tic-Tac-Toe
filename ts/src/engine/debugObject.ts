@@ -1,4 +1,4 @@
-import { GameObject, drawObject } from './gameObject.js'
+import { GameObject, DrawObject } from './gameObject.js'
 import { Engine, minMax } from './engine.js'
 import { Vector } from './vector.js'
 
@@ -11,7 +11,7 @@ class DebugObject extends GameObject {
         let xMidPosition = playableArea.min.x + ((playableArea.max.x - playableArea.min.x) / 2);
         let yMidPosition = playableArea.min.y + ((playableArea.max.y - playableArea.min.y) / 2);
 
-        let drawObject: drawObject[] = [
+        let drawObject: DrawObject[] = [
             {
                 "drawPoints": [
                     new Vector(playableArea.min.x - 1, playableArea.min.y),

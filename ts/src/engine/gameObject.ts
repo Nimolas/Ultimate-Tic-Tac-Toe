@@ -1,18 +1,18 @@
 import { minMax, Engine } from './engine.js'
 import { Vector } from "./vector.js"
 
-interface drawObject {
+interface DrawObject {
     drawPoints: Vector[],
-    fillColour: string,
-    strokeColour: string,
+    fillColour?: string,
+    strokeColour?: string,
     minMax?: minMax
 }
 
 class GameObject {
-    drawObjects: drawObject[] = [];
+    drawObjects: DrawObject[] = [];
     position: Vector = null;
     toDelete = false;
-    minMax: minMax
+    minMax: minMax;
 
     constructor(x: number, y: number) {
         this.position = new Vector(x, y);
@@ -24,7 +24,7 @@ class GameObject {
         this.minMax = undefined;
     }
 
-    setDrawObject(drawObject: drawObject[]) {
+    setDrawObject(drawObject: DrawObject[]) {
         this.drawObjects = drawObject;
         this.getObjectBounds();
     }
@@ -191,4 +191,4 @@ class GameObject {
     }
 }
 
-export { GameObject, drawObject }
+export { GameObject, DrawObject }

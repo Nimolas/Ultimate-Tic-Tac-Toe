@@ -1,8 +1,15 @@
-import { GameObject } from "../engine/gameObject.js";
+import { DrawObject, GameObject } from "../engine/gameObject.js";
+import { Vector } from "../engine/vector.js";
 
 class Node extends GameObject {
-    constructor(x: number, y: number) {
-        super(x, y);
+    constructor(position: Vector) {
+        super(position);
+
+        let drawObject: DrawObject[] = [
+            { drawPoints: [this.position] }
+        ]
+
+        this.setDrawObject(drawObject)
     }
 }
 

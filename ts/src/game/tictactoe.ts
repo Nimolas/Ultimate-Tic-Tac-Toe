@@ -1,5 +1,6 @@
 import { Engine } from "../engine/engine.js";
 import { GameObject } from "../engine/gameObject.js";
+import { Vector } from "../engine/vector.js";
 import { IGame } from "../interfaces/iGame.js";
 import { Grid } from "./grid.js";
 
@@ -7,7 +8,7 @@ class TicTacToe implements IGame {
     gameObjects: GameObject[] = [];
 
     constructor() {
-        this.gameObjects.push(new Grid(Engine.playableArea.max.x / 2, Engine.playableArea.max.y / 2))
+        this.gameObjects.push(new Grid(new Vector(Engine.playableArea.max.x / 2, Engine.playableArea.max.y / 2), this.gameObjects))
     }
 
     destructor(): void {

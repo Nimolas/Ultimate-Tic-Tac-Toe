@@ -25,7 +25,7 @@ class Engine {
     constructor() {
         this.setupCanvas();
         this.setupEvents();
-        this.debugObject = new DebugObject(0, 0, Engine.playableArea);
+        this.debugObject = new DebugObject(new Vector(0, 0), Engine.playableArea);
     }
 
     setGame(game: IGame) {

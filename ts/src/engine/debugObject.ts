@@ -5,8 +5,8 @@ import { Vector } from './vector.js'
 class DebugObject extends GameObject {
     lastTime: number = null;
     fps: number = 0;
-    constructor(x: number, y: number, playableArea: minMax) {
-        super(x, y);
+    constructor(position: Vector, playableArea: minMax) {
+        super(position);
 
         let xMidPosition = playableArea.min.x + ((playableArea.max.x - playableArea.min.x) / 2);
         let yMidPosition = playableArea.min.y + ((playableArea.max.y - playableArea.min.y) / 2);

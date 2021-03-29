@@ -14,8 +14,8 @@ class GameObject {
     toDelete = false;
     minMax: minMax;
 
-    constructor(x: number, y: number) {
-        this.position = new Vector(x, y);
+    constructor(position: Vector) {
+        this.position = position;
     }
 
     destructor() {
@@ -163,6 +163,14 @@ class GameObject {
             Engine.context.closePath();
             this.setDrawModes(drawable.strokeColour, drawable.fillColour);
         };
+    }
+
+    drawAPixel(position: Vector)
+    {
+        Engine.context.beginPath();
+        Engine.context.rect(position.x, position.y, 1, 1);
+        Engine.context.closePath();
+        this.setDrawModes("#eaeaea", "#eaeaea");
     }
 
     drawByPixel() {

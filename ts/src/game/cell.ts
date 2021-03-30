@@ -6,6 +6,7 @@ import { Node } from "./node.js"
 class Cell extends GameObject {
     nodes: Node[][] = [];
     active: boolean = true;
+    completed: boolean = false;
     borderSize: number = 2.5;
 
     constructor(position: Vector, minMax: minMax, gameObjects: GameObject[]) {
@@ -45,9 +46,16 @@ class Cell extends GameObject {
         let yFirstBarPos = (minMax.min.y + yThird) - this.position.y;
         let ySecondBarPos = (minMax.max.y - yThird) - this.position.y;
 
-        console.log("Cell pos: ", this.position)
-
         let drawObjects: DrawObject[] = [];
+        drawObjects.push({
+            drawPoints: [
+                this.toLocalCoords(new Vector(minMax.min.x, minMax.min.y)),
+                this.toLocalCoords(new Vector(minMax.max.x, minMax.min.y)),
+                this.toLocalCoords(new Vector(minMax.max.x, minMax.max.y)),
+                this.toLocalCoords(new Vector(minMax.min.x, minMax.max.y)),
+            ],
+            fillColour: "rgba(225, 225, 225, 0.3)",
+        })
         drawObjects.push({
             drawPoints: [
                 new Vector(xFirstBarPos - this.borderSize, minMax.min.y - this.position.y),
@@ -86,6 +94,12 @@ class Cell extends GameObject {
         })
 
         return drawObjects;
+    }
+
+    draw() {
+        if (this.active || this.completed)
+            this.drawByLine(this.drawObjects.slice(0, 1));
+        this.drawByLine(this.drawObjects.slice(1, this.drawObjects.length));
     }
 }
 

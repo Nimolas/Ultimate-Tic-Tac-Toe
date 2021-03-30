@@ -136,8 +136,12 @@ class GameObject {
         this.drawByLine();
     }
 
-    toGlobalCoords(localVector: Vector) {
+    toGlobalCoords(localVector: Vector): Vector {
         return new Vector(this.position.x + localVector.x, this.position.y + localVector.y);
+    }
+
+    toLocalCoords(globalVector: Vector) {
+        return new Vector(globalVector.x - this.position.x, globalVector.y - this.position.y)
     }
 
     getWidth() {
@@ -148,8 +152,8 @@ class GameObject {
         return this.getMinMax().max.y - this.getMinMax().min.y
     }
 
-    drawByLine() {
-        for (let drawable of this.drawObjects) {
+    drawByLine(drawObject: DrawObject[] = this.drawObjects) {
+        for (let drawable of drawObject) {
             Engine.context.beginPath();
             Engine.context.moveTo(this.toGlobalCoords(drawable.drawPoints[0]).x, this.toGlobalCoords(drawable.drawPoints[0]).y);
 
@@ -165,16 +169,15 @@ class GameObject {
         };
     }
 
-    drawAPixel(position: Vector)
-    {
+    drawAPixel(position: Vector) {
         Engine.context.beginPath();
         Engine.context.rect(position.x, position.y, 1, 1);
         Engine.context.closePath();
         this.setDrawModes("#eaeaea", "#eaeaea");
     }
 
-    drawByPixel() {
-        for (let drawable of this.drawObjects) {
+    drawByPixel(drawObject: DrawObject[] = this.drawObjects) {
+        for (let drawable of drawObject) {
             Engine.context.beginPath();
 
             for (let drawPoint of drawable.drawPoints) {

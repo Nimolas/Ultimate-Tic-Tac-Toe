@@ -8,8 +8,8 @@ class DebugObject extends GameObject {
     constructor(position: Vector, playableArea: minMax) {
         super(position);
 
-        let xMidPosition = playableArea.min.x + ((playableArea.max.x - playableArea.min.x) / 2);
-        let yMidPosition = playableArea.min.y + ((playableArea.max.y - playableArea.min.y) / 2);
+        let xMidPosition: number = playableArea.min.x + ((playableArea.max.x - playableArea.min.x) / 2);
+        let yMidPosition: number = playableArea.min.y + ((playableArea.max.y - playableArea.min.y) / 2);
 
         let drawObject: DrawObject[] = [
             {
@@ -83,7 +83,7 @@ class DebugObject extends GameObject {
 
     updateFPS(timestamp: number) {
         if (this.lastTime != null) {
-            let timeTaken = timestamp - this.lastTime;
+            let timeTaken: number = timestamp - this.lastTime;
             this.fps = 1000 / timeTaken; // 1000 because 1000 milliseconds in a second
         }
         this.lastTime = timestamp
@@ -97,8 +97,8 @@ class DebugObject extends GameObject {
     }
 
     drawObjectBounds(objectToDraw: GameObject) {
-        let minGlobal = objectToDraw.toGlobalCoords(objectToDraw.minMax.min);
-        let maxGlobal = objectToDraw.toGlobalCoords(objectToDraw.minMax.max);
+        let minGlobal: Vector = objectToDraw.toGlobalCoords(objectToDraw.minMax.min);
+        let maxGlobal: Vector = objectToDraw.toGlobalCoords(objectToDraw.minMax.max);
 
         Engine.context.beginPath();
 
@@ -111,8 +111,8 @@ class DebugObject extends GameObject {
         this.setDrawModes("", "rgba(209, 49, 17, 0.45)"); //light red for object hitbox
 
         for (let drawable of objectToDraw.drawObjects) {
-            let minObjGlobal = objectToDraw.toGlobalCoords(drawable.minMax.min);
-            let maxObjGlobal = objectToDraw.toGlobalCoords(drawable.minMax.max);
+            let minObjGlobal: Vector = objectToDraw.toGlobalCoords(drawable.minMax.min);
+            let maxObjGlobal: Vector = objectToDraw.toGlobalCoords(drawable.minMax.max);
 
             Engine.context.beginPath();
 

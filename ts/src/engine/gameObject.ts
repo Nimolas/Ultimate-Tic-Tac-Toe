@@ -11,7 +11,7 @@ interface DrawObject {
 class GameObject {
     drawObjects: DrawObject[] = [];
     position: Vector = null;
-    toDelete = false;
+    toDelete: boolean = false;
     minMax: minMax;
 
     constructor(position: Vector) {
@@ -46,11 +46,11 @@ class GameObject {
             minX: false, maxX: false, minY: false, maxY: false
         }
 
-        let otherMinGlobal = other.toGlobalCoords(other.getMinMax().min);
-        let otherMaxGlobal = other.toGlobalCoords(other.getMinMax().max);
+        let otherMinGlobal: Vector = other.toGlobalCoords(other.getMinMax().min);
+        let otherMaxGlobal: Vector = other.toGlobalCoords(other.getMinMax().max);
 
-        let thisMinGlobal = this.toGlobalCoords(this.getMinMax().min)
-        let thisMaxGlobal = this.toGlobalCoords(this.getMinMax().max)
+        let thisMinGlobal: Vector = this.toGlobalCoords(this.getMinMax().min)
+        let thisMaxGlobal: Vector = this.toGlobalCoords(this.getMinMax().max)
 
         if (otherMinGlobal.x > thisMinGlobal.x
             && otherMinGlobal.x < thisMaxGlobal.x)
@@ -72,8 +72,8 @@ class GameObject {
 
     assignIndividualObjectBounds() {
         for (let drawObject of this.drawObjects) {
-            let min = new Vector(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
-            let max = new Vector(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+            let min: Vector = new Vector(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+            let max: Vector = new Vector(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
 
             for (let point of drawObject.drawPoints) {
                 if (point.x < min.x)
@@ -87,7 +87,7 @@ class GameObject {
                     max = new Vector(max.x, point.y)
             };
 
-            let minMax = {
+            let minMax: minMax = {
                 min: min,
                 max: max
             }
@@ -105,8 +105,8 @@ class GameObject {
     }
 
     assignTotalObjectBounds() {
-        let min = new Vector(1000000, 1000000);
-        let max = new Vector(-1000000, -1000000);
+        let min: Vector = new Vector(1000000, 1000000);
+        let max: Vector = new Vector(-1000000, -1000000);
 
         for (let drawObject of this.drawObjects) {
             if (drawObject.minMax.max.x > max.x)
@@ -119,7 +119,7 @@ class GameObject {
                 min = new Vector(min.x, drawObject.minMax.min.y)
         }
 
-        let minMax = {
+        let minMax: minMax = {
             min: min,
             max: max
         }

@@ -15,18 +15,18 @@ class Vector {
     }
 
     static rotateVectorAroundPoint(vector: Vector, point: Vector, angle: number) {
-        let radians = angle * (Math.PI / 180);
+        let radians: number = angle * (Math.PI / 180);
 
-        let sine = Math.sin(radians);
-        let cosine = Math.cos(radians);
+        let sine: number = Math.sin(radians);
+        let cosine: number = Math.cos(radians);
 
-        let temp = new Vector(
+        let temp: Vector = new Vector(
             vector.x - point.x,
             vector.y - point.y
         )
 
-        let newX = temp.x * cosine - temp.y * sine;
-        let newY = temp.x * sine + temp.y * cosine;
+        let newX: number = temp.x * cosine - temp.y * sine;
+        let newY: number = temp.x * sine + temp.y * cosine;
 
         temp.x = newX + point.x
         temp.y = newY + point.y;

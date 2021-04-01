@@ -1,4 +1,4 @@
-import { Engine, minMax } from "../engine/engine.js";
+import { minMax } from "../engine/engine.js";
 import { DrawObject, GameObject, } from "../engine/gameObject.js";
 import { Vector } from "../engine/vector.js";
 import { Node } from "./node.js"

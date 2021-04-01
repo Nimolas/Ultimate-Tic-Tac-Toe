@@ -71,7 +71,7 @@ class Grid extends GameObject {
                 new Vector(firstBarPos.x - this.borderSize, Engine.playableArea.max.y - this.position.y),
             ],
             fillColour: "#6D0AD0",
-            strokeColour: "#6D0AD0",
+            strokeColour: "#eaeaea",
         })
         drawObjects.push({
             drawPoints: [
@@ -81,7 +81,7 @@ class Grid extends GameObject {
                 new Vector(secondBarPos.x - this.borderSize, Engine.playableArea.max.y - this.position.y),
             ],
             fillColour: "#6D0AD0",
-            strokeColour: "#6D0AD0",
+            strokeColour: "#eaeaea",
         })
         drawObjects.push({
             drawPoints: [
@@ -91,7 +91,7 @@ class Grid extends GameObject {
                 new Vector(Engine.playableArea.min.x - this.position.x, firstBarPos.y + this.borderSize),
             ],
             fillColour: "#6D0AD0",
-            strokeColour: "#6D0AD0",
+            strokeColour: "#eaeaea",
         })
         drawObjects.push({
             drawPoints: [
@@ -101,7 +101,7 @@ class Grid extends GameObject {
                 new Vector(Engine.playableArea.min.x - this.position.x, secondBarPos.y + this.borderSize),
             ],
             fillColour: "#6D0AD0",
-            strokeColour: "#6D0AD0",
+            strokeColour: "#eaeaea",
         })
 
         return drawObjects;

@@ -176,8 +176,8 @@ class GameObject {
         this.setDrawModes("#eaeaea", "#eaeaea");
     }
 
-    drawByPixel(drawObject: DrawObject[] = this.drawObjects) {
-        for (let drawable of drawObject) {
+    drawByPixel(drawObjects: DrawObject[] = this.drawObjects): void {
+        for (let drawable of drawObjects) {
             Engine.context.beginPath();
 
             for (let drawPoint of drawable.drawPoints) {
@@ -188,6 +188,19 @@ class GameObject {
             Engine.context.closePath();
             this.setDrawModes(drawable.strokeColour, drawable.fillColour);
         };
+    }
+
+    drawByArc(drawObjects: DrawObject[] = this.drawObjects): void {
+        for (let drawable of drawObjects) {
+            Engine.context.beginPath();
+
+            for (let drawPoint of drawable.drawPoints) {
+                Engine.context.arc(this.position.x, this.position.y, drawPoint.x, 0, 2 * Math.PI);
+            };
+
+            Engine.context.closePath();
+            this.setDrawModes(drawable.strokeColour, drawable.fillColour);
+        }
     }
 
     setDrawModes(strokeStyle: string, fillStyle: string) {

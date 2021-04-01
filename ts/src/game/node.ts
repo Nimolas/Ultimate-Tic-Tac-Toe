@@ -59,11 +59,8 @@ class Node extends GameObject {
             max: new Vector(cellMinMax.max.x * .65, cellMinMax.max.y * .65)
         }
 
-        let distAvg: Vector = new Vector(
-            (cellMinMax.max.x - cellMinMax.min.x) / 2,
-            (cellMinMax.max.y - cellMinMax.min.y) / 2
-        )
-        let radius: number = (distAvg.x + distAvg.y) / 2;
+        let radius: number = cellMinMax.max.x - cellMinMax.min.x < cellMinMax.max.y - cellMinMax.min.y ?
+            (cellMinMax.max.x - cellMinMax.min.x) / 2 : (cellMinMax.max.y - cellMinMax.min.y) / 2
 
         return [
             {

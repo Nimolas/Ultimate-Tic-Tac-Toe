@@ -1,18 +1,19 @@
-import { minMax, Engine } from './engine.js'
+import { Engine } from './engine.js'
+import { MinMax } from './minMax.js';
 import { Vector } from "./vector.js"
 
 interface DrawObject {
     drawPoints: Vector[],
     fillColour?: string,
     strokeColour?: string,
-    minMax?: minMax
+    minMax?: MinMax
 }
 
 class GameObject {
     drawObjects: DrawObject[] = [];
     position: Vector = null;
     toDelete: boolean = false;
-    minMax: minMax;
+    minMax: MinMax;
 
     constructor(position: Vector) {
         this.position = position;
@@ -87,10 +88,7 @@ class GameObject {
                     max = new Vector(max.x, point.y)
             };
 
-            let minMax: minMax = {
-                min: min,
-                max: max
-            }
+            let minMax: MinMax = new MinMax(min, max);
 
             drawObject.minMax = minMax; //Assign each individual part of a drawObject's minMax
         }
@@ -119,10 +117,7 @@ class GameObject {
                 min = new Vector(min.x, drawObject.minMax.min.y)
         }
 
-        let minMax: minMax = {
-            min: min,
-            max: max
-        }
+        let minMax: MinMax = new MinMax(min, max);
 
         this.minMax = minMax; //Assign overall box of the entire object
     }
@@ -190,7 +185,7 @@ class GameObject {
         };
     }
 
-    drawByArc(drawObjects: DrawObject[] = this.drawObjects): void {
+    drawByCircle(drawObjects: DrawObject[] = this.drawObjects): void {
         for (let drawable of drawObjects) {
             Engine.context.beginPath();
 

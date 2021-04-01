@@ -1,46 +1,44 @@
-import { minMax } from "../engine/engine.js";
 import { DrawObject, GameObject } from "../engine/gameObject.js";
+import { MinMax } from "../engine/minMax.js";
 import { Vector } from "../engine/vector.js";
-import { Cell } from "./cell.js";
 
 class Node extends GameObject {
     borderSize: number = 2;
     drawType: string = "";
-    constructor(position: Vector, minMax: minMax) {
+    nodeMinMax: MinMax;
+    constructor(position: Vector, minMax: MinMax) {
         super(position);
-
-        this.drawType = "Naught"
-        this.setDrawObject(this.generateNaught(minMax))
+        this.nodeMinMax = minMax;
     }
 
-    generateCross(cellMinMax: minMax): DrawObject[] {
-        cellMinMax = {
-            min: this.toLocalCoords(cellMinMax.min),
-            max: this.toLocalCoords(cellMinMax.max)
-        }
+    generateCross(nodeMinMax: MinMax): DrawObject[] {
+        nodeMinMax = new MinMax(
+            this.toLocalCoords(nodeMinMax.min),
+            this.toLocalCoords(nodeMinMax.max)
+        )
 
-        cellMinMax = {
-            min: new Vector(cellMinMax.min.x * .7, cellMinMax.min.y * .7),
-            max: new Vector(cellMinMax.max.x * .7, cellMinMax.max.y * .7)
-        }
+        nodeMinMax = new MinMax(
+            new Vector(nodeMinMax.min.x * .7, nodeMinMax.min.y * .7),
+            new Vector(nodeMinMax.max.x * .7, nodeMinMax.max.y * .7)
+        )
 
         return [
             {
                 drawPoints: [
-                    new Vector(cellMinMax.min.x + this.borderSize, cellMinMax.min.y),
-                    new Vector(cellMinMax.min.x, cellMinMax.min.y + this.borderSize),
-                    new Vector(cellMinMax.max.x - this.borderSize, cellMinMax.max.y),
-                    new Vector(cellMinMax.max.x, cellMinMax.max.y - this.borderSize),
+                    new Vector(nodeMinMax.min.x + this.borderSize, nodeMinMax.min.y),
+                    new Vector(nodeMinMax.min.x, nodeMinMax.min.y + this.borderSize),
+                    new Vector(nodeMinMax.max.x - this.borderSize, nodeMinMax.max.y),
+                    new Vector(nodeMinMax.max.x, nodeMinMax.max.y - this.borderSize),
                 ],
                 fillColour: "#8b0000",
                 strokeColour: "#eaeaea"
             },
             {
                 drawPoints: [
-                    new Vector(cellMinMax.min.x + this.borderSize, cellMinMax.max.y),
-                    new Vector(cellMinMax.min.x, cellMinMax.max.y - this.borderSize),
-                    new Vector(cellMinMax.max.x - this.borderSize, cellMinMax.min.y),
-                    new Vector(cellMinMax.max.x, cellMinMax.min.y + this.borderSize),
+                    new Vector(nodeMinMax.min.x + this.borderSize, nodeMinMax.max.y),
+                    new Vector(nodeMinMax.min.x, nodeMinMax.max.y - this.borderSize),
+                    new Vector(nodeMinMax.max.x - this.borderSize, nodeMinMax.min.y),
+                    new Vector(nodeMinMax.max.x, nodeMinMax.min.y + this.borderSize),
                 ],
                 fillColour: "#8b0000",
                 strokeColour: "#eaeaea"
@@ -48,19 +46,23 @@ class Node extends GameObject {
         ]
     }
 
-    generateNaught(cellMinMax: minMax): DrawObject[] {
-        cellMinMax = {
-            min: this.toLocalCoords(cellMinMax.min),
-            max: this.toLocalCoords(cellMinMax.max)
-        }
+    generateNaught(nodeMinMax: MinMax): DrawObject[] {
+        nodeMinMax = new MinMax(
+            this.toLocalCoords(nodeMinMax.min),
+            this.toLocalCoords(nodeMinMax.max)
+        )
 
-        cellMinMax = {
-            min: new Vector(cellMinMax.min.x * .65, cellMinMax.min.y * .65),
-            max: new Vector(cellMinMax.max.x * .65, cellMinMax.max.y * .65)
-        }
+        nodeMinMax = new MinMax(
+            new Vector(nodeMinMax.min.x * .65, nodeMinMax.min.y * .65),
+            new Vector(nodeMinMax.max.x * .65, nodeMinMax.max.y * .65)
+        )
 
-        let radius: number = cellMinMax.max.x - cellMinMax.min.x < cellMinMax.max.y - cellMinMax.min.y ?
-            (cellMinMax.max.x - cellMinMax.min.x) / 2 : (cellMinMax.max.y - cellMinMax.min.y) / 2
+        let dist: Vector = new Vector(
+            nodeMinMax.max.x - nodeMinMax.min.x,
+            nodeMinMax.max.y - nodeMinMax.min.y
+        )
+
+        let radius: number = dist.x < dist.y ? dist.x / 2 : dist.y / 2
 
         return [
             {
@@ -80,10 +82,23 @@ class Node extends GameObject {
         ]
     }
 
+    setDrawType(currentActivePlayer: string): boolean {
+        if (this.drawType == "") {
+            this.drawType = currentActivePlayer;
+
+            if (this.drawType == "Cross")
+                this.setDrawObject(this.generateCross(this.nodeMinMax))
+            else this.setDrawObject(this.generateNaught(this.nodeMinMax))
+
+            return true;
+        }
+        return false;
+    }
+
     draw(): void {
         if (this.drawType == "Cross")
             this.drawByLine()
-        else this.drawByArc();
+        else this.drawByCircle();
     }
 }
 

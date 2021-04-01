@@ -1,16 +1,21 @@
-import { minMax } from "../engine/engine.js";
 import { DrawObject, GameObject, } from "../engine/gameObject.js";
+import { MinMax } from "../engine/minMax.js";
 import { Vector } from "../engine/vector.js";
 import { Node } from "./node.js"
 
 class Cell extends GameObject {
     nodes: Node[][] = [];
-    active: boolean = false;
+    active: boolean = true;
     completed: boolean = false;
+    winningPlayer: string;
     borderSize: number = 0.5;
+    cellMinMax: MinMax;
+    naughtColour: string = "rgba(23,81,126,0.3)"
+    crossColour: string = "rgba(139,0,0,0.3)"
 
-    constructor(position: Vector, minMax: minMax, gameObjects: GameObject[]) {
+    constructor(position: Vector, minMax: MinMax, gameObjects: GameObject[]) {
         super(position);
+        this.cellMinMax = minMax;
 
         let xThird: number = (minMax.max.x - minMax.min.x) / 3;
         let yThird: number = (minMax.max.y - minMax.min.y) / 3;
@@ -38,10 +43,8 @@ class Cell extends GameObject {
                     (minY + maxY) / 2
                 )
 
-                let minMaxNode: minMax = {
-                    min: new Vector(minX, minY),
-                    max: new Vector(maxX, maxY)
-                }
+                let minMaxNode: MinMax = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY));
+
 
                 let node: Node = new Node(nodePos, minMaxNode)
                 gameObjects.push(node);
@@ -54,15 +57,15 @@ class Cell extends GameObject {
             minMax.max.y - minMax.min.y
         )
 
-        minMax = { //Scale the area of a cell to be 5% less on each side
-            min: new Vector(minMax.min.x + (dist.x * 0.95), minMax.min.y + (dist.y * 0.95)),
-            max: new Vector(minMax.max.x - (dist.x * 0.95), minMax.max.y - (dist.y * 0.95))
-        }
+        minMax = new MinMax( //Scale the area of a cell to be 5% less on each side
+            new Vector(minMax.min.x + (dist.x * 0.95), minMax.min.y + (dist.y * 0.95)),
+            new Vector(minMax.max.x - (dist.x * 0.95), minMax.max.y - (dist.y * 0.95))
+        )
 
         this.setDrawObject(this.generateDrawObject(minMax))
     }
 
-    generateDrawObject(minMax: minMax): DrawObject[] {
+    generateDrawObject(minMax: MinMax): DrawObject[] {
 
         let xThird: number = (minMax.max.x - minMax.min.x) / 3;
         let yThird: number = (minMax.max.y - minMax.min.y) / 3;
@@ -125,6 +128,93 @@ class Cell extends GameObject {
         })
 
         return drawObjects;
+    }
+
+    generateWinLine(position1: Vector, position2: Vector): DrawObject {
+        return {
+            drawPoints: [
+                new Vector(position1.x, position1.y),
+                new Vector(position2.x, position2.y)
+            ],
+            fillColour: "#046827",
+            strokeColour: "#eaeaea"
+        }
+    }
+
+    checkWin(playerType: string): boolean {
+        for (let x = 0; x < 3; x++) {
+            if (this.nodes[x][0].drawType == playerType &&
+                this.nodes[x][1].drawType == playerType &&
+                this.nodes[x][2].drawType == playerType) {
+
+                this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+                this.drawObjects.push(this.generateWinLine(this.nodes[x][0].position, this.nodes[x][2].position))
+                this.winningPlayer = playerType;
+                return true;
+            }
+        }
+
+        for (let y = 0; y < 3; y++) {
+            if (this.nodes[0][y].drawType == playerType &&
+                this.nodes[1][y].drawType == playerType &&
+                this.nodes[2][y].drawType == playerType) {
+
+                this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+                this.drawObjects.push(this.generateWinLine(this.nodes[0][y].position, this.nodes[2][y].position))
+                this.winningPlayer = playerType;
+                return true;
+            }
+        }
+
+        if (this.nodes[0][0].drawType == playerType &&
+            this.nodes[1][1].drawType == playerType &&
+            this.nodes[2][2].drawType == playerType) {
+
+            this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+            this.drawObjects.push(this.generateWinLine(this.nodes[0][0].position, this.nodes[2][2].position))
+            this.winningPlayer = playerType;
+            return true;
+        }
+
+        if (this.nodes[0][2].drawType == playerType &&
+            this.nodes[1][1].drawType == playerType &&
+            this.nodes[2][0].drawType == playerType) {
+
+            this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+            this.drawObjects.push(this.generateWinLine(this.nodes[0][2].position, this.nodes[2][0].position))
+            this.winningPlayer = playerType;
+            return true;
+        }
+
+        return false;
+    }
+
+    update(): void {
+        let won: boolean = false;
+
+        if (!this.completed) {
+            if (this.checkWin("Naught") || this.checkWin("Cross"))
+                won = true;
+
+            if (won) {
+                this.completed = true;
+                this.active = false
+            }
+        }
+    }
+
+    handleMouseEvent(mouseClick: Vector, currentActivePlayer: string): boolean {
+        if (this.active) {
+            if (this.cellMinMax.pointIntersects(mouseClick))
+                for (let xNodes of this.nodes) {
+                    for (let yNode of xNodes) {
+                        if (yNode.nodeMinMax.pointIntersects(mouseClick))
+                            if (yNode.setDrawType(currentActivePlayer))
+                                return true;
+                    }
+                }
+        }
+        return false;
     }
 
     draw() {

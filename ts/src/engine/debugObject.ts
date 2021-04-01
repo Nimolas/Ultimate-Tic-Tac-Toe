@@ -1,11 +1,12 @@
 import { GameObject, DrawObject } from './gameObject.js'
-import { Engine, minMax } from './engine.js'
+import { Engine } from './engine.js'
 import { Vector } from './vector.js'
+import { MinMax } from './minMax.js';
 
 class DebugObject extends GameObject {
     lastTime: number = null;
     fps: number = 0;
-    constructor(position: Vector, playableArea: minMax) {
+    constructor(position: Vector, playableArea: MinMax) {
         super(position);
 
         let xMidPosition: number = playableArea.min.x + ((playableArea.max.x - playableArea.min.x) / 2);

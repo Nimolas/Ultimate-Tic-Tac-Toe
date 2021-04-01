@@ -32,7 +32,6 @@ class TicTacToe implements IGame {
         for (let gameObject of this.gameObjects)
             gameObject.draw();
     }
-
 }
 
 export { TicTacToe }

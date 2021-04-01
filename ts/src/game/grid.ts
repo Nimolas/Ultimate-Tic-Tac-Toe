@@ -1,11 +1,13 @@
-import { Engine, minMax } from "../engine/engine.js";
+import { Engine } from "../engine/engine.js";
 import { DrawObject, GameObject } from "../engine/gameObject.js";
+import { MinMax } from "../engine/minMax.js";
 import { Vector } from "../engine/vector.js";
 import { Cell } from "./cell.js";
 
 class Grid extends GameObject {
     cells: Cell[][] = [];
     borderSize: number = 2;
+    currentActivePlayer: string = "Cross";
 
     constructor(position: Vector, gameObjects: GameObject[]) {
         super(position);
@@ -36,12 +38,9 @@ class Grid extends GameObject {
                     (minY + maxY) / 2
                 )
 
-                let minMax: minMax = {
-                    min: new Vector(minX, minY),
-                    max: new Vector(maxX, maxY)
-                }
+                let boundary: MinMax = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY))
 
-                let cell: Cell = new Cell(cellPos, minMax, gameObjects)
+                let cell: Cell = new Cell(cellPos, boundary, gameObjects)
                 gameObjects.push(cell);
                 this.cells[x].push(cell);
             }
@@ -105,6 +104,26 @@ class Grid extends GameObject {
         })
 
         return drawObjects;
+    }
+
+    swapActivePlayer() {
+        if (this.currentActivePlayer == "Naught")
+            this.currentActivePlayer = "Cross"
+        else this.currentActivePlayer = "Naught"
+    }
+
+    update(): null {
+        for (let mouseClick of Engine.mouseClickPositions) {
+            if (Engine.playableArea.pointIntersects(mouseClick))
+                for (let xCells of this.cells) {
+                    for (let yCell of xCells) {
+                        if (yCell.handleMouseEvent(mouseClick, this.currentActivePlayer)) {
+                            this.swapActivePlayer();
+                            return null;
+                        }
+                    }
+                }
+        }
     }
 
     draw() {

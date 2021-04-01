@@ -3,14 +3,11 @@ import { DebugObject } from "./debugObject.js";
 import { Vector } from "./vector.js"
 import { Utilities } from "./utilities.js"
 import { GameObject } from "./gameObject.js";
-
-interface minMax {
-    min: Vector,
-    max: Vector
-}
+import { MinMax } from "./minMax.js";
 
 class Engine {
     static keys: string[] = [];
+    static mouseClickPositions: Vector[] = [];
     debug: boolean = false;
     runGame: boolean = true;
     frameId: number = 0;
@@ -20,7 +17,7 @@ class Engine {
     game: IGame;
     static context: CanvasRenderingContext2D
     static canvas: HTMLCanvasElement;
-    static playableArea: minMax;
+    static playableArea: MinMax;
 
     constructor() {
         this.setupCanvas();
@@ -132,6 +129,9 @@ class Engine {
         window.addEventListener("resize", () => {
             this.setupCanvas();
         })
+        window.addEventListener("mousedown", (e) => {
+            Engine.mouseClickPositions.push(new Vector(e.pageX, e.pageY));
+        })
     }
 
     setupCanvas() {
@@ -141,10 +141,10 @@ class Engine {
 
         Engine.context = Engine.canvas.getContext("2d");
 
-        Engine.playableArea = {
-            min: new Vector(Engine.getWindowWidth() * 0.15, Engine.getWindowHeight() * 0.10),
-            max: new Vector(Engine.getWindowWidth() * 0.85, Engine.getWindowHeight() * 0.90)
-        }
+        Engine.playableArea = new MinMax(
+            new Vector(Engine.getWindowWidth() * 0.15, Engine.getWindowHeight() * 0.10),
+            new Vector(Engine.getWindowWidth() * 0.85, Engine.getWindowHeight() * 0.90)
+        )
 
         this.clearScreen();
     }
@@ -157,4 +157,4 @@ class Engine {
     };
 }
 
-export { Engine, minMax }
+export { Engine }

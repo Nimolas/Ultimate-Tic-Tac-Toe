@@ -133,8 +133,8 @@ class Cell extends GameObject {
     generateWinLine(position1: Vector, position2: Vector): DrawObject {
         return {
             drawPoints: [
-                new Vector(position1.x, position1.y),
-                new Vector(position2.x, position2.y)
+                this.toLocalCoords(new Vector(position1.x, position1.y)),
+                this.toLocalCoords(new Vector(position2.x, position2.y))
             ],
             fillColour: "#046827",
             strokeColour: "#eaeaea"

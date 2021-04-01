@@ -9,6 +9,7 @@ class Node extends GameObject {
     constructor(position: Vector, minMax: MinMax) {
         super(position);
         this.nodeMinMax = minMax;
+        this.setDrawObject([{ drawPoints: [new Vector(0, 0)] }])
     }
 
     generateCross(nodeMinMax: MinMax): DrawObject[] {

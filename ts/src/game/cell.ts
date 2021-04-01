@@ -13,9 +13,19 @@ class Cell extends GameObject {
     naughtColour: string = "rgba(23,81,126,0.3)"
     crossColour: string = "rgba(139,0,0,0.3)"
 
-    constructor(position: Vector, minMax: MinMax, gameObjects: GameObject[]) {
+    constructor(position: Vector, cellMinMax: MinMax, gameObjects: GameObject[]) {
         super(position);
-        this.cellMinMax = minMax;
+        this.cellMinMax = cellMinMax;
+
+        let dist: Vector = new Vector(
+            cellMinMax.max.x - cellMinMax.min.x,
+            cellMinMax.max.y - cellMinMax.min.y
+        )
+
+        let minMax = new MinMax( //Scale the area of a cell to be 5% less on each side
+            new Vector(cellMinMax.min.x + (dist.x * 0.05), cellMinMax.min.y + (dist.y * 0.05)),
+            new Vector(cellMinMax.max.x - (dist.x * 0.05), cellMinMax.max.y - (dist.y * 0.05))
+        )
 
         let xThird: number = (minMax.max.x - minMax.min.x) / 3;
         let yThird: number = (minMax.max.y - minMax.min.y) / 3;
@@ -45,22 +55,11 @@ class Cell extends GameObject {
 
                 let minMaxNode: MinMax = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY));
 
-
                 let node: Node = new Node(nodePos, minMaxNode)
                 gameObjects.push(node);
                 this.nodes[x].push(node);
             }
         }
-
-        let dist: Vector = new Vector(
-            minMax.max.x - minMax.min.x,
-            minMax.max.y - minMax.min.y
-        )
-
-        minMax = new MinMax( //Scale the area of a cell to be 5% less on each side
-            new Vector(minMax.min.x + (dist.x * 0.95), minMax.min.y + (dist.y * 0.95)),
-            new Vector(minMax.max.x - (dist.x * 0.95), minMax.max.y - (dist.y * 0.95))
-        )
 
         this.setDrawObject(this.generateDrawObject(minMax))
     }

@@ -2,7 +2,7 @@ import { Engine } from "../engine/engine.js";
 import { DrawObject, GameObject } from "../engine/gameObject.js";
 import { MinMax } from "../engine/minMax.js";
 import { Vector } from "../engine/vector.js";
-import { Cell } from "./cell.js";
+import { Cell, PickedNode } from "./cell.js";
 
 class Grid extends GameObject {
     cells: Cell[][] = [];
@@ -112,13 +112,35 @@ class Grid extends GameObject {
         else this.currentActivePlayer = "Naught"
     }
 
+    disableAllCells(): void {
+        for (let cells of this.cells)
+            for (let cell of cells) {
+                cell.active = false;
+            }
+    }
+
+    activateAllNonCompletedCells(): void {
+        for (let cells of this.cells)
+            for (let cell of cells) {
+                if (!cell.completed)
+                    cell.active = true;
+            }
+    }
+
     update(): null {
         for (let mouseClick of Engine.mouseClickPositions) {
             if (Engine.playableArea.pointIntersects(mouseClick))
                 for (let xCells of this.cells) {
                     for (let yCell of xCells) {
-                        if (yCell.handleMouseEvent(mouseClick, this.currentActivePlayer)) {
+                        let result: PickedNode = yCell.handleMouseEvent(mouseClick, this.currentActivePlayer)
+
+                        if (result.picked) {
                             this.swapActivePlayer();
+                            this.disableAllCells();
+                            if (!this.cells[result.nodeX][result.nodeY].completed)
+                                this.cells[result.nodeX][result.nodeY].active = true;
+                            else
+                                this.activateAllNonCompletedCells();
                             return null;
                         }
                     }

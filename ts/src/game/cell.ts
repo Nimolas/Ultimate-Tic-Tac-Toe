@@ -3,12 +3,18 @@ import { MinMax } from "../engine/minMax.js";
 import { Vector } from "../engine/vector.js";
 import { Node } from "./node.js"
 
+interface PickedNode {
+    nodeX: number;
+    nodeY: number;
+    picked: boolean;
+}
+
 class Cell extends GameObject {
     nodes: Node[][] = [];
     active: boolean = true;
     completed: boolean = false;
     winningPlayer: string;
-    borderSize: number = 0.5;
+    borderSize: number = 1;
     cellMinMax: MinMax;
     naughtColour: string = "rgba(23,81,126,0.3)"
     crossColour: string = "rgba(139,0,0,0.3)"
@@ -129,12 +135,37 @@ class Cell extends GameObject {
         return drawObjects;
     }
 
-    generateWinLine(position1: Vector, position2: Vector): DrawObject {
+    generateWinLine(position1: Vector, position2: Vector, direction: string): DrawObject {
+        let drawPoints: Vector[] = [];
+        switch (direction) {
+            case "Vertical":
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x - this.borderSize, position1.y)))
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x + this.borderSize, position1.y)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x + this.borderSize, position2.y)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x - this.borderSize, position2.y)))
+                break;
+            case "Horizontal":
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x, position1.y - this.borderSize)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x, position2.y - this.borderSize)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x, position2.y + this.borderSize)))
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x, position1.y + this.borderSize)))
+                break;
+            case "TopBottomDiagonal":
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x + this.borderSize, position1.y)))
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x, position1.y + this.borderSize)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x - this.borderSize, position2.y)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x, position2.y - this.borderSize)))
+                break;
+            case "BottomTopDiagonal":
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x + this.borderSize, position1.y)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x, position2.y + this.borderSize)))
+                drawPoints.push(this.toLocalCoords(new Vector(position2.x, position2.y - this.borderSize)))
+                drawPoints.push(this.toLocalCoords(new Vector(position1.x - this.borderSize, position1.y)))
+                break;
+        }
+
         return {
-            drawPoints: [
-                this.toLocalCoords(new Vector(position1.x, position1.y)),
-                this.toLocalCoords(new Vector(position2.x, position2.y))
-            ],
+            drawPoints: drawPoints,
             fillColour: "#046827",
             strokeColour: "#eaeaea"
         }
@@ -147,7 +178,7 @@ class Cell extends GameObject {
                 this.nodes[x][2].drawType == playerType) {
 
                 this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-                this.drawObjects.push(this.generateWinLine(this.nodes[x][0].position, this.nodes[x][2].position))
+                this.drawObjects.push(this.generateWinLine(this.nodes[x][0].position, this.nodes[x][2].position, "Vertical"))
                 this.winningPlayer = playerType;
                 return true;
             }
@@ -159,7 +190,7 @@ class Cell extends GameObject {
                 this.nodes[2][y].drawType == playerType) {
 
                 this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-                this.drawObjects.push(this.generateWinLine(this.nodes[0][y].position, this.nodes[2][y].position))
+                this.drawObjects.push(this.generateWinLine(this.nodes[0][y].position, this.nodes[2][y].position, "Horizontal"))
                 this.winningPlayer = playerType;
                 return true;
             }
@@ -170,7 +201,7 @@ class Cell extends GameObject {
             this.nodes[2][2].drawType == playerType) {
 
             this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-            this.drawObjects.push(this.generateWinLine(this.nodes[0][0].position, this.nodes[2][2].position))
+            this.drawObjects.push(this.generateWinLine(this.nodes[0][0].position, this.nodes[2][2].position, "TopBottomDiagonal"))
             this.winningPlayer = playerType;
             return true;
         }
@@ -180,7 +211,7 @@ class Cell extends GameObject {
             this.nodes[2][0].drawType == playerType) {
 
             this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-            this.drawObjects.push(this.generateWinLine(this.nodes[0][2].position, this.nodes[2][0].position))
+            this.drawObjects.push(this.generateWinLine(this.nodes[0][2].position, this.nodes[2][0].position, "BottomTopDiagonal"))
             this.winningPlayer = playerType;
             return true;
         }
@@ -188,7 +219,7 @@ class Cell extends GameObject {
         return false;
     }
 
-    update(): void {
+    updateLoop() {
         let won: boolean = false;
 
         if (!this.completed) {
@@ -202,18 +233,34 @@ class Cell extends GameObject {
         }
     }
 
-    handleMouseEvent(mouseClick: Vector, currentActivePlayer: string): boolean {
+    update(): void {
+        let won: boolean = false;
+
+        this.updateLoop();
+    }
+
+    handleMouseEvent(mouseClick: Vector, currentActivePlayer: string): PickedNode {
         if (this.active) {
             if (this.cellMinMax.pointIntersects(mouseClick))
-                for (let xNodes of this.nodes) {
-                    for (let yNode of xNodes) {
-                        if (yNode.nodeMinMax.pointIntersects(mouseClick))
-                            if (yNode.setDrawType(currentActivePlayer))
-                                return true;
+                for (let x = 0; x < 3; x++) {
+                    for (let y = 0; y < 3; y++) {
+                        if (this.nodes[x][y].nodeMinMax.pointIntersects(mouseClick))
+                            if (this.nodes[x][y].setDrawType(currentActivePlayer)) {
+                                this.updateLoop(); //Used to check if the last node selected makes this complete, and picks itself.
+                                return {
+                                    nodeX: x,
+                                    nodeY: y,
+                                    picked: true
+                                };
+                            }
                     }
                 }
         }
-        return false;
+        return {
+            nodeX: -1,
+            nodeY: -1,
+            picked: false
+        };
     }
 
     draw() {
@@ -223,4 +270,4 @@ class Cell extends GameObject {
     }
 }
 
-export { Cell }
+export { Cell, PickedNode }

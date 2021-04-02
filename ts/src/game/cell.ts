@@ -136,7 +136,7 @@ class Cell extends GridObject {
             if (this.cellMinMax.pointIntersects(mouseClick))
                 for (let x = 0; x < 3; x++) {
                     for (let y = 0; y < 3; y++) {
-                        if (this.nodes[x][y].nodeMinMax.pointIntersects(mouseClick))
+                        if (this.nodes[x][y].nodeMinMax.pointIntersects(mouseClick)) {
                             if (this.nodes[x][y].setDrawType(currentActivePlayer)) {
                                 this.checkWinState(this.nodes);
                                 return {
@@ -145,6 +145,7 @@ class Cell extends GridObject {
                                     picked: true
                                 };
                             }
+                        }
                     }
                 }
         }

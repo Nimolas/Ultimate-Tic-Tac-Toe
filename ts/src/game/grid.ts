@@ -3,14 +3,16 @@ import { DrawObject, GameObject } from "../engine/gameObject.js";
 import { MinMax } from "../engine/minMax.js";
 import { Vector } from "../engine/vector.js";
 import { Cell, PickedNode } from "./cell.js";
+import { GridObject } from "./gridObject.js";
 
-class Grid extends GameObject {
+class Grid extends GridObject {
     cells: Cell[][] = [];
-    borderSize: number = 2;
     currentActivePlayer: string = "Cross";
 
     constructor(position: Vector, gameObjects: GameObject[]) {
         super(position);
+
+        this.borderSize = 2;
 
         let xThird: number = (Engine.playableArea.max.x - Engine.playableArea.min.x) / 3;
         let yThird: number = (Engine.playableArea.max.y - Engine.playableArea.min.y) / 3;
@@ -127,7 +129,7 @@ class Grid extends GameObject {
             }
     }
 
-    update(): null {
+    handleMouseEvents(): null {
         for (let mouseClick of Engine.mouseClickPositions) {
             if (Engine.playableArea.pointIntersects(mouseClick))
                 for (let xCells of this.cells) {
@@ -146,6 +148,12 @@ class Grid extends GameObject {
                     }
                 }
         }
+    }
+
+    update(): void {
+        this.handleMouseEvents();
+        if (this.checkWinState(this.cells))
+            this.disableAllCells();
     }
 
     draw() {

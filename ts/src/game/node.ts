@@ -1,14 +1,18 @@
 import { DrawObject, GameObject } from "../engine/gameObject.js";
 import { MinMax } from "../engine/minMax.js";
 import { Vector } from "../engine/vector.js";
+import { GridObject } from "./gridObject.js";
 
-class Node extends GameObject {
+class Node extends GridObject {
     borderSize: number = 2;
-    drawType: string = "";
     nodeMinMax: MinMax;
+
     constructor(position: Vector, minMax: MinMax) {
         super(position);
+
         this.nodeMinMax = minMax;
+        this.borderSize = 2;
+
         this.setDrawObject([{ drawPoints: [new Vector(0, 0)] }])
     }
 

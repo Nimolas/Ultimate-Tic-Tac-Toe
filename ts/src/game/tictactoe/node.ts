@@ -1,6 +1,6 @@
-import { DrawObject, GameObject } from "../engine/gameObject.js";
-import { MinMax } from "../engine/minMax.js";
-import { Vector } from "../engine/vector.js";
+import { DrawObject, GameObject } from "../../engine/gameObject.js";
+import { MinMax } from "../../engine/minMax.js";
+import { Vector } from "../../engine/vector.js";
 import { GridObject } from "./gridObject.js";
 
 class Node extends GridObject {

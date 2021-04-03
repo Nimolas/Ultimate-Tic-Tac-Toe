@@ -1,5 +1,5 @@
-import { DrawObject, GameObject } from "../engine/gameObject.js";
-import { Vector } from "../engine/vector.js";
+import { DrawObject, GameObject } from "../../engine/gameObject.js";
+import { Vector } from "../../engine/vector.js";
 
 class GridObject extends GameObject {
     completed: boolean = false;

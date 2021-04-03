@@ -72,7 +72,7 @@ class DebugObject extends GameObject {
                 ],
                 "fillColour": "rgba(209, 49, 17, 0.45)",
                 "strokeColour": ""
-            },
+            }
         ]
 
         this.setDrawObject(drawObject)
@@ -93,8 +93,8 @@ class DebugObject extends GameObject {
     draw() {
         this.drawByLine();
 
-        Engine.context.font = "14px Gill Sans MT";
-        Engine.context.fillText(`FPS: ${this.fps.toFixed(2)}`, Engine.getWindowWidth() * 0.96, Engine.getWindowHeight() * 0.99);
+        this.drawObjects.last().text = this.fps.toString();
+        this.drawByText(`FPS: ${this.fps}`, new Vector(Engine.getWindowWidth() * 0.96, Engine.getWindowHeight() * 0.99));
     }
 
     drawObjectBounds(objectToDraw: GameObject) {

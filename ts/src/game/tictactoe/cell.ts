@@ -1,6 +1,6 @@
-import { DrawObject, GameObject, } from "../engine/gameObject.js";
-import { MinMax } from "../engine/minMax.js";
-import { Vector } from "../engine/vector.js";
+import { DrawObject, GameObject, } from "../../engine/gameObject.js";
+import { MinMax } from "../../engine/minMax.js";
+import { Vector } from "../../engine/vector.js";
 import { GridObject } from "./gridObject.js";
 import { Node } from "./node.js"
 
@@ -133,7 +133,7 @@ class Cell extends GridObject {
 
     handleMouseEvent(mouseClick: Vector, currentActivePlayer: string): PickedNode {
         if (this.active) {
-            if (this.cellMinMax.pointIntersects(mouseClick))
+            if (this.cellMinMax.pointIntersects(mouseClick)) {
                 for (let x = 0; x < 3; x++) {
                     for (let y = 0; y < 3; y++) {
                         if (this.nodes[x][y].nodeMinMax.pointIntersects(mouseClick)) {
@@ -148,6 +148,7 @@ class Cell extends GridObject {
                         }
                     }
                 }
+            }
         }
         return {
             nodeX: -1,

@@ -7,6 +7,7 @@ interface DrawObject {
     fillColour?: string,
     strokeColour?: string,
     minMax?: MinMax
+    text?: string;
 }
 
 class GameObject {
@@ -140,15 +141,22 @@ class GameObject {
     }
 
     getWidth() {
-        return this.getMinMax().max.x - this.getMinMax().min.x
+        return this.minMax.max.x - this.minMax.min.x
     }
 
     getHeight() {
-        return this.getMinMax().max.y - this.getMinMax().min.y
+        return this.minMax.max.y - this.minMax.min.y
     }
 
-    drawByLine(drawObject: DrawObject[] = this.drawObjects) {
-        for (let drawable of drawObject) {
+    drawAPixel(position: Vector) {
+        Engine.context.beginPath();
+        Engine.context.rect(position.x, position.y, 1, 1);
+        Engine.context.closePath();
+        this.setDrawModes("#eaeaea", "#eaeaea");
+    }
+
+    drawByLine(drawObjects: DrawObject[] = this.drawObjects) {
+        for (let drawable of drawObjects) {
             Engine.context.beginPath();
             Engine.context.moveTo(this.toGlobalCoords(drawable.drawPoints[0]).x, this.toGlobalCoords(drawable.drawPoints[0]).y);
 
@@ -164,11 +172,12 @@ class GameObject {
         };
     }
 
-    drawAPixel(position: Vector) {
-        Engine.context.beginPath();
-        Engine.context.rect(position.x, position.y, 1, 1);
-        Engine.context.closePath();
-        this.setDrawModes("#eaeaea", "#eaeaea");
+    drawByText(text: string, position: Vector, colour: string = "#ffffff"): void {
+        Engine.context.font = "14px Gill Sans MT";
+        Engine.context.textAlign = "center";
+
+        Engine.context.fillText(text, position.x, position.y);
+        this.setDrawModes("", colour);
     }
 
     drawByPixel(drawObjects: DrawObject[] = this.drawObjects): void {

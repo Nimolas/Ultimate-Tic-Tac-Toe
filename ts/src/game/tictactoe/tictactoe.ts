@@ -1,7 +1,7 @@
-import { Engine } from "../engine/engine.js";
-import { GameObject } from "../engine/gameObject.js";
-import { Vector } from "../engine/vector.js";
-import { IGame } from "../interfaces/iGame.js";
+import { Engine } from "../../engine/engine.js";
+import { GameObject } from "../../engine/gameObject.js";
+import { Vector } from "../../engine/vector.js";
+import { IGame } from "../../interfaces/iGame.js";
 import { Grid } from "./grid.js";
 
 class TicTacToe implements IGame {

@@ -1,3 +1,5 @@
+
+
 class Utilities {
     static getRandomInt(min: number, max: number) {
         min = Math.ceil(min);

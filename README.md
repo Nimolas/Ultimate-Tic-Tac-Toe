@@ -19,7 +19,7 @@ Install the dev server with yarn. `yarn add --dev live-server`
 ## Running
 
 To transpile the code to js run the following command:
- - `tsc`
+ - `yarn build`
 
 To run the server needed to display the game, use the following command:
  - `yarn run live-server`

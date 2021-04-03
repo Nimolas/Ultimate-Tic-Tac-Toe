@@ -1,6 +1,6 @@
 import { GameObject, DrawObject } from './gameObject.js'
-import { Engine } from './engine.js'
-import { Vector } from './vector.js'
+import { Engine } from '../engine.js'
+import { Vector } from '../utils/vector.js'
 import { MinMax } from './minMax.js';
 
 class DebugObject extends GameObject {
@@ -94,7 +94,7 @@ class DebugObject extends GameObject {
         this.drawByLine();
 
         this.drawObjects.last().text = this.fps.toString();
-        this.drawByText(`FPS: ${this.fps}`, new Vector(Engine.getWindowWidth() * 0.96, Engine.getWindowHeight() * 0.99));
+        this.drawByText(`FPS: ${this.fps.toFixed(2)}`, new Vector(Engine.getWindowWidth() * 0.96, Engine.getWindowHeight() * 0.99));
     }
 
     drawObjectBounds(objectToDraw: GameObject) {

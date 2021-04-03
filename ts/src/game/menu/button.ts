@@ -1,7 +1,7 @@
-import { GameObject } from "../../engine/gameObject.js";
-import { MinMax } from "../../engine/minMax.js";
-import { Vector } from "../../engine/vector.js";
-import "../../engine/extensions.js"
+import { GameObject } from "../../engine/gameobjects/gameObject.js";
+import { MinMax } from "../../engine/gameobjects/minMax.js";
+import { Vector } from "../../engine/utils/vector.js";
+import "../../engine/utils/extensions.js"
 
 class Button extends GameObject {
     constructor(position: Vector, area: MinMax, text: string) {

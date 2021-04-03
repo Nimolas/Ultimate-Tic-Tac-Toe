@@ -1,7 +1,7 @@
 import { Engine } from "../../engine/engine.js";
-import { DrawObject, GameObject } from "../../engine/gameObject.js";
-import { MinMax } from "../../engine/minMax.js";
-import { Vector } from "../../engine/vector.js";
+import { DrawObject, GameObject } from "../../engine//gameobjects/gameObject.js";
+import { MinMax } from "../../engine//gameobjects/minMax.js";
+import { Vector } from "../../engine/utils/vector.js";
 import { Cell, PickedNode } from "./cell.js";
 import { GridObject } from "./gridObject.js";
 

@@ -1,8 +1,8 @@
 import { Engine } from "../../engine/engine.js";
-import { GameObject } from "../../engine/gameObject.js";
-import { MinMax } from "../../engine/minMax.js";
-import { Vector } from "../../engine/vector.js";
-import { IGame } from "../../interfaces/iGame.js";
+import { GameObject } from "../../engine/gameobjects/gameObject.js";
+import { MinMax } from "../../engine/gameobjects/minMax.js";
+import { Vector } from "../../engine/utils/vector.js";
+import { IGame } from "../../engine/interfaces/iGame.js"
 import { Button } from "./button.js";
 
 

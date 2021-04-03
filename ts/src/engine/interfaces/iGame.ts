@@ -1,4 +1,4 @@
-import { GameObject } from "../engine/gameObject.js";
+import { GameObject } from "../gameobjects/gameObject.js"
 
 interface IGame {
     gameObjects: GameObject[];

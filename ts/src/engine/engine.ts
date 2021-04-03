@@ -1,9 +1,7 @@
-import { IGame } from "../interfaces/iGame.js";
-import { DebugObject } from "./debugObject.js";
-import { Vector } from "./vector.js"
-import { Utilities } from "./utilities.js"
-import { GameObject } from "./gameObject.js";
-import { MinMax } from "./minMax.js";
+import { IGame } from "./interfaces/iGame.js"
+import { DebugObject } from "./gameobjects/debugObject.js";
+import { Vector } from "./utils/vector.js"
+import { MinMax } from "./gameobjects/minMax.js";
 
 class Engine {
     static keys: string[] = [];
@@ -97,7 +95,7 @@ class Engine {
     executeCoRoutines() {
         for (let coRoutine of Engine.coRoutines)
             if (coRoutine.next().done)
-                Utilities.removeElement(Engine.coRoutines, coRoutine)
+                Engine.coRoutines.removeElement(coRoutine)
     }
 
     gameLoop(timestamp: number) { //This is passed in by requestAnimationFrame. Is the time when the frame was called in relation to the start of the execution of the game in milliseconds
@@ -117,7 +115,7 @@ class Engine {
             switch (key) {
                 case "q":
                     this.debug = !this.debug; //toggle debug mode
-                    Utilities.removeElement(Engine.keys, key); //delete the key from the list, so other things can't use it's value. Stops two things from using one press
+                    Engine.keys.removeElement(key); //delete the key from the list, so other things can't use it's value. Stops two things from using one press
                     break;
             }
     }

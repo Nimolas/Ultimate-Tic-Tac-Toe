@@ -93,8 +93,7 @@ class DebugObject extends GameObject {
     draw() {
         this.drawByLine();
 
-        this.drawObjects.last().text = this.fps.toString();
-        this.drawByText(`FPS: ${this.fps.toFixed(2)}`, new Vector(Engine.getWindowWidth() * 0.96, Engine.getWindowHeight() * 0.99));
+        this.drawByText(`FPS: ${this.fps.toFixed(2)}`, new Vector(Engine.getWindowWidth() * 0.96, Engine.getWindowHeight() * 0.99), "rgba(209, 49, 17, 0.45)");
     }
 
     drawObjectBounds(objectToDraw: GameObject) {

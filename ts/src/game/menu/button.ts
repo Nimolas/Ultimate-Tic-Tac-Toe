@@ -4,24 +4,19 @@ import { Vector } from "../../engine/utils/vector.js";
 import "../../engine/utils/extensions.js"
 
 class Button extends GameObject {
-    constructor(position: Vector, area: MinMax, text: string) {
+    constructor(position: Vector, dist: Vector, text: string) {
         super(position);
 
         this.setDrawObject([
             {
                 drawPoints: [
-                    this.toLocalCoords(new Vector(area.min.x, area.min.y)),
-                    this.toLocalCoords(new Vector(area.max.x, area.min.y)),
-                    this.toLocalCoords(new Vector(area.max.x, area.max.y)),
-                    this.toLocalCoords(new Vector(area.min.x, area.max.y)),
+                    new Vector(-(dist.x / 2), -(dist.y / 2)),
+                    new Vector(dist.x / 2, -(dist.y / 2)),
+                    new Vector(dist.x / 2, dist.y / 2),
+                    new Vector(-(dist.x / 2), dist.y / 2),
                 ],
                 fillColour: "#6D0AD0"
             }])
-
-        let minMaxDist: Vector = new Vector(
-            this.minMax.max.x - this.minMax.min.x,
-            this.minMax.max.y - this.minMax.min.y
-        )
 
         this.drawObjects.push({
             drawPoints: [
@@ -35,7 +30,7 @@ class Button extends GameObject {
 
     draw() {
         this.drawByLine(this.drawObjects.slice(0, 1));
-        this.drawByText(this.drawObjects.last().text, this.drawObjects.last().drawPoints[0],)
+        this.drawByText(this.drawObjects.last().text, this.toGlobalCoords(this.drawObjects.last().drawPoints[0]), this.drawObjects.last().strokeColour, "40px")
     }
 }
 

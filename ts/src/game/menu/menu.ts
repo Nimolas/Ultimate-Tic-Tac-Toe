@@ -15,18 +15,28 @@ class Menu implements IGame {
             Engine.playableArea.max.y - Engine.playableArea.min.y
         )
 
-        let firstMinMax: MinMax = new MinMax(
-            new Vector(Engine.playableArea.min.x, Engine.playableArea.min.y),
-            new Vector(Engine.playableArea.min.x + (playableDist.x / 2), Engine.playableArea.min.y + (playableDist.y / 2))
+        let dist: Vector = new Vector(
+            playableDist.x / 2,
+            playableDist.y / 2
         )
 
         this.gameObjects.push(new Button(
             new Vector(
-                playableDist.x / 2,
-                playableDist.y / 2
+                Engine.playableArea.min.x + (dist.x / 2),
+                Engine.playableArea.min.y + ((dist.y / 2) + dist.y / 2)
+
             ),
-            firstMinMax,
+            dist,
             "Local"))
+
+        this.gameObjects.push(new Button(
+            new Vector(
+                Engine.playableArea.min.x + (dist.x + (dist.x / 2)),
+                Engine.playableArea.min.y + ((dist.y / 2) + dist.y / 2)
+
+            ),
+            dist,
+            "Online"))
     }
 
     destructor(): void {

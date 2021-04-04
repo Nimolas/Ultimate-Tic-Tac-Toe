@@ -172,12 +172,14 @@ class GameObject {
         };
     }
 
-    drawByText(text: string, position: Vector, colour: string = "#ffffff"): void {
-        Engine.context.font = "14px Gill Sans MT";
+    drawByText(text: string, position: Vector, colour: string = "#ffffff", fontSize: string = "14px"): void {
+        Engine.context.beginPath();
+        Engine.context.font = `${fontSize} Gill Sans MT`;
         Engine.context.textAlign = "center";
 
-        Engine.context.fillText(text, position.x, position.y);
         this.setDrawModes("", colour);
+        Engine.context.fillText(text, position.x, position.y);
+        Engine.context.closePath();
     }
 
     drawByPixel(drawObjects: DrawObject[] = this.drawObjects): void {

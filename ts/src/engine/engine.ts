@@ -6,16 +6,17 @@ import { MinMax } from "./gameobjects/minMax.js";
 class Engine {
     static keys: string[] = [];
     static mouseClickPositions: Vector[] = [];
-    debug: boolean = false;
-    runGame: boolean = true;
-    frameId: number = 0;
     static fps: number = 0;
     static coRoutines: Generator[] = [];
-    debugObject: DebugObject;
-    game: IGame;
     static context: CanvasRenderingContext2D
     static canvas: HTMLCanvasElement;
     static playableArea: MinMax;
+    static scenes: IGame[] = [];
+    debug: boolean = false;
+    runGame: boolean = true;
+    frameId: number = 0;
+    debugObject: DebugObject;
+    game: IGame;
 
     constructor() {
         this.setupCanvas();
@@ -31,6 +32,10 @@ class Engine {
 
     start() {
         console.log("Engine started!")
+
+        Engine.startCoRoutine(this.checkForNextScene());
+        Engine.startCoRoutine(this.checkForUndefinedObjects());
+
         this.gameLoop(0);
     }
 
@@ -43,6 +48,10 @@ class Engine {
 
         this.game.destructor();
         this.game = undefined;
+    }
+
+    static switchScene(game: IGame) {
+        Engine.scenes.push(game);
     }
 
     static startCoRoutine(coRoutine: Generator) {
@@ -66,6 +75,27 @@ class Engine {
         Engine.context.restore();
     }
 
+    *checkForNextScene(): Generator {
+        while (true) {
+            if (Engine.scenes.length > 0) {
+                stop();
+                this.setGame(Engine.scenes.last());
+                Engine.scenes.removeElement(Engine.scenes.last());
+            }
+            yield null;
+        }
+    }
+
+    *checkForUndefinedObjects(): Generator {
+        while (true) {
+            for (let gameObject of this.game.gameObjects)
+                if (gameObject == undefined)
+                    this.game.gameObjects.removeElement(gameObject);
+            yield null;
+        }
+    }
+
+
     draw() {
         this.clearScreen();
         this.game.draw();
@@ -87,9 +117,8 @@ class Engine {
 
         this.debugObject.updateFPS(timestamp);
 
-        Engine.fps = this.debugObject.getFPS();
-
         Engine.keys = [];
+        Engine.mouseClickPositions = [];
     }
 
     executeCoRoutines() {
@@ -146,7 +175,6 @@ class Engine {
 
         this.clearScreen();
     }
-
 
     clearScreen() {
         Engine.context.clearRect(0, 0, Engine.canvas.width, Engine.canvas.height);

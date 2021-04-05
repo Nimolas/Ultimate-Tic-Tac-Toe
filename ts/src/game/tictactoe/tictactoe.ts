@@ -7,7 +7,11 @@ import { Grid } from "./grid.js";
 class TicTacToe implements IGame {
     gameObjects: GameObject[] = [];
 
-    constructor() {
+    constructor(version: string) {
+        if (version == "AI") {
+
+        }
+
         this.gameObjects.push(new Grid(new Vector(Engine.playableArea.max.x / 2, Engine.playableArea.max.y / 2), this.gameObjects))
     }
 

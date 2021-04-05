@@ -16,16 +16,22 @@ class Button extends GameObject {
                     new Vector(-(dist.x / 2), dist.y / 2),
                 ],
                 fillColour: "#6D0AD0"
+            },
+            {
+                drawPoints: [
+                    new Vector(0, 0)
+                ],
+                strokeColour: "#ffffff",
+                text: text
             }])
+    }
 
-        this.drawObjects.push({
-            drawPoints: [
-                new Vector(0, 0)
-            ],
-            strokeColour: "#ffffff",
-            text: text
-        })
-        this.getObjectBounds();
+    handleMouseEvents(): void {
+        return null; //Overwrite this in the thing calling it to control what it does;
+    }
+
+    update() {
+        this.handleMouseEvents();
     }
 
     draw() {

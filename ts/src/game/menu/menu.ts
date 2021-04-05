@@ -1,9 +1,9 @@
 import { Engine } from "../../engine/engine.js";
 import { GameObject } from "../../engine/gameobjects/gameObject.js";
-import { MinMax } from "../../engine/gameobjects/minMax.js";
 import { Vector } from "../../engine/utils/vector.js";
 import { IGame } from "../../engine/interfaces/iGame.js"
 import { Button } from "./button.js";
+import { TicTacToe } from "../tictactoe/tictactoe.js";
 
 
 class Menu implements IGame {
@@ -29,6 +29,13 @@ class Menu implements IGame {
             dist,
             "Local"))
 
+        let localButton = this.gameObjects.last() as Button;
+        localButton.handleMouseEvents = () => {
+            for (let mouseEvent of Engine.mouseClickPositions)
+                if (localButton.minMax.pointIntersects(localButton.toLocalCoords(mouseEvent)))
+                    Engine.switchScene(new TicTacToe("AI"))
+        }
+
         this.gameObjects.push(new Button(
             new Vector(
                 Engine.playableArea.min.x + (dist.x + (dist.x / 2)),
@@ -37,6 +44,13 @@ class Menu implements IGame {
             ),
             dist,
             "Online"))
+
+        let onlineButton = this.gameObjects.last() as Button;
+        onlineButton.handleMouseEvents = () => {
+            for (let mouseEvent of Engine.mouseClickPositions)
+                if (onlineButton.minMax.pointIntersects(onlineButton.toLocalCoords(mouseEvent)))
+                    Engine.switchScene(new TicTacToe("Online"))
+        }
     }
 
     destructor(): void {

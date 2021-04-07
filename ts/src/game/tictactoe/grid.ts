@@ -9,47 +9,57 @@ class Grid extends GridObject {
     cells: Cell[][] = [];
     currentActivePlayer: string = "Cross";
 
-    constructor(position: Vector, gameObjects: GameObject[]) {
+    constructor(AIActive: boolean, position?: Vector, gameObjects?: GameObject[]) {
         super(position);
+        if (!AIActive) {
+            this.borderSize = 2;
 
-        this.borderSize = 2;
+            let xThird: number = (Engine.playableArea.max.x - Engine.playableArea.min.x) / 3;
+            let yThird: number = (Engine.playableArea.max.y - Engine.playableArea.min.y) / 3;
 
-        let xThird: number = (Engine.playableArea.max.x - Engine.playableArea.min.x) / 3;
-        let yThird: number = (Engine.playableArea.max.y - Engine.playableArea.min.y) / 3;
+            let minX: number = Engine.playableArea.min.x
+            let minY: number = Engine.playableArea.min.y
 
-        let minX: number = Engine.playableArea.min.x
-        let minY: number = Engine.playableArea.min.y
+            for (let x = 0; x < 3; x++) {
+                this.cells.push([]);
+                if (x > 0)
+                    minX = minX + xThird;
+                else minX = Engine.playableArea.min.x
 
-        for (let x = 0; x < 3; x++) {
-            this.cells.push([]);
-            if (x > 0)
-                minX = minX + xThird;
-            else minX = Engine.playableArea.min.x
+                let maxX: number = minX + xThird
 
-            let maxX: number = minX + xThird
+                for (let y = 0; y < 3; y++) {
+                    if (y > 0)
+                        minY = minY + yThird
+                    else minY = Engine.playableArea.min.y
 
-            for (let y = 0; y < 3; y++) {
-                if (y > 0)
-                    minY = minY + yThird
-                else minY = Engine.playableArea.min.y
+                    let maxY: number = minY + yThird
 
-                let maxY: number = minY + yThird
+                    let cellPos = new Vector(
+                        (minX + maxX) / 2,
+                        (minY + maxY) / 2
+                    )
 
-                let cellPos = new Vector(
-                    (minX + maxX) / 2,
-                    (minY + maxY) / 2
-                )
+                    let boundary: MinMax = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY))
 
-                let boundary: MinMax = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY))
+                    let cell: Cell = new Cell(AIActive, cellPos, boundary, gameObjects)
+                    gameObjects.push(cell);
+                    this.cells[x].push(cell);
+                }
+            }
 
-                let cell: Cell = new Cell(cellPos, boundary, gameObjects)
-                gameObjects.push(cell);
-                this.cells[x].push(cell);
+            this.setDrawObject(this.generateDrawObject(xThird, yThird))
+        } else {
+            for (let x = 0; x < 3; x++) {
+                this.cells.push([]);
+                for (let y = 0; y < 3; y++) {
+                    let cell: Cell = new Cell(AIActive);
+                    this.cells[x].push(cell);
+                }
             }
         }
-
-        this.setDrawObject(this.generateDrawObject(xThird, yThird))
     }
+
 
     generateDrawObject(xThird: number, yThird: number): DrawObject[] {
 
@@ -129,9 +139,22 @@ class Grid extends GridObject {
             }
     }
 
+    setNodeForAI(xIndex: number, yIndex: number, currentPlayer: string): void {
+        let result = this.cells[xIndex][yIndex].setDrawTypeForAI(xIndex, yIndex, currentPlayer)
+
+        if (result.picked) {
+            this.disableAllCells();
+            if (!this.cells[xIndex][yIndex].completed)
+                this.cells[xIndex][yIndex].active = true;
+            else
+                this.activateAllNonCompletedCells();
+            return null;
+        }
+    }
+
     handleMouseEvents(): null {
         for (let mouseClick of Engine.mouseClickPositions) {
-            if (Engine.playableArea.pointIntersects(mouseClick))
+            if (Engine.playableArea.pointIntersects(mouseClick)) {
                 for (let xCells of this.cells) {
                     for (let yCell of xCells) {
                         let result: PickedNode = yCell.handleMouseEvent(mouseClick, this.currentActivePlayer)
@@ -147,12 +170,13 @@ class Grid extends GridObject {
                         }
                     }
                 }
+            }
         }
     }
 
     update(): void {
         this.handleMouseEvents();
-        if (this.checkWinState(this.cells))
+        if (this.checkWinState(false,this.cells))
             this.disableAllCells();
     }
 

@@ -3,11 +3,16 @@ import { DebugObject } from "./gameobjects/debugObject.js";
 import { Vector } from "./utils/vector.js"
 import { MinMax } from "./gameobjects/minMax.js";
 
+interface CoRoutine {
+    type: string,
+    fn: Generator
+}
+
 class Engine {
     static keys: string[] = [];
     static mouseClickPositions: Vector[] = [];
     static fps: number = 0;
-    static coRoutines: Generator[] = [];
+    static coRoutines: CoRoutine[] = [];
     static context: CanvasRenderingContext2D
     static canvas: HTMLCanvasElement;
     static playableArea: MinMax;
@@ -33,8 +38,8 @@ class Engine {
     start() {
         console.log("Engine started!")
 
-        Engine.startCoRoutine(this.checkForNextScene());
-        Engine.startCoRoutine(this.checkForUndefinedObjects());
+        this.startInternalCoRoutine(this.checkForNextScene());
+        this.startInternalCoRoutine(this.checkForUndefinedObjects());
 
         this.gameLoop(0);
     }
@@ -43,7 +48,11 @@ class Engine {
         window.cancelAnimationFrame(this.frameId);
 
         this.runGame = false;
-        Engine.coRoutines = [];
+
+        for (let coRoutine of Engine.coRoutines)
+            if (coRoutine.type == "Game")
+                Engine.coRoutines.removeElement(coRoutine);
+
         Engine.keys = [];
 
         this.game.destructor();
@@ -54,8 +63,12 @@ class Engine {
         Engine.scenes.push(game);
     }
 
+    startInternalCoRoutine(coRoutine: Generator) {
+        Engine.coRoutines.push({ type: "Engine", fn: coRoutine });
+    }
+
     static startCoRoutine(coRoutine: Generator) {
-        Engine.coRoutines.push(coRoutine);
+        Engine.coRoutines.push({ type: "Game", fn: coRoutine });
     }
 
     static getWindowWidth() {
@@ -95,7 +108,6 @@ class Engine {
         }
     }
 
-
     draw() {
         this.clearScreen();
         this.game.draw();
@@ -123,7 +135,7 @@ class Engine {
 
     executeCoRoutines() {
         for (let coRoutine of Engine.coRoutines)
-            if (coRoutine.next().done)
+            if (coRoutine.fn.next().done)
                 Engine.coRoutines.removeElement(coRoutine)
     }
 

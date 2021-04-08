@@ -8,40 +8,54 @@ interface DecisionNode {
 }
 
 class AI {
-    decisions: DecisionNode[];
+    decisions: DecisionNode;
     playerType: string = "";
 
     constructor(playerType: string) {
         this.playerType = playerType;
-        this.calculateMoves(playerType);
+        this.decisions = { grid: new Grid(true), winWeight: 0, futureMoves: this.calculateMoves(playerType) }
+        console.log("AI Finished calculating move")
     }
 
     calculateMoves(playerType: string, gridState: Grid = new Grid(true)): DecisionNode[] {
-        let activeCells: Cell[] = [];
+        interface activeCells {
+            xNode: number;
+            yNode: number;
+        }
+        let activeCells: activeCells[] = [];
         let decisions: DecisionNode[] = [];
 
-        for (let xCells of gridState.cells)
-            for (let yCell of xCells)
-                if (yCell.active) activeCells.push(yCell);
+        for (let x = 0; x < 3; x++) {
+            for (let y = 0; y < 3; y++) {
+                if (gridState.cells[x][y].active == true) activeCells.push({ xNode: x, yNode: y })
+            }
+        }
 
         for (let activeCell of activeCells) {
             for (let x = 0; x < 3; x++) {
                 for (let y = 0; y < 3; y++) {
-                    decisions.push({ grid: new Grid(true), winWeight: 0 })
-                    if (activeCell.setDrawTypeForAI(x, y, playerType).picked) {
-                        if (gridState.checkWin(true, gridState.cells, this.playerType)) {
-                            decisions.last().grid = this.copyBoardState(gridState);
+                    let gridCopy = this.copyBoardState(gridState);
+
+                    if (gridCopy.setNodeForAI(activeCell.xNode, activeCell.yNode, x, y, playerType)) {
+
+                        decisions.push({ grid: this.copyBoardState(gridCopy), winWeight: 0 })
+
+                        if (gridState.checkWin(true, gridCopy.cells, this.playerType)) {
+                            decisions.last().grid = this.copyBoardState(gridCopy);
                             decisions.last().winWeight += 2;
                         }
-                        else if (gridState.checkDraw(gridState.cells)) {
-                            decisions.last().grid = this.copyBoardState(gridState);
+                        else if (gridCopy.checkWin(true, gridCopy.cells, this.playerType == "Naught" ? "Cross" : this.playerType)) {
+                            decisions.last().grid = this.copyBoardState(gridCopy);
+                        }
+                        else if (gridCopy.checkDraw(gridCopy.cells)) {
+                            decisions.last().grid = this.copyBoardState(gridCopy);
                             decisions.last().winWeight += 1;
-                        } else if (gridState.checkWin(true, gridState.cells, this.playerType == "Naught" ? this.playerType : "Cross")) {
-                            decisions.last().grid = this.copyBoardState(gridState);
-                        } else {
-                            let newGrid = this.copyBoardState(gridState);
+                        }
+                        else {
+                            let newGrid = this.copyBoardState(gridCopy);
                             let playerMove = playerType == "Naught" ? "Cross" : "Naught";
                             decisions[decisions.length - 1].futureMoves = this.calculateMoves(playerMove, newGrid);
+
                             for (let futureMove of decisions.last().futureMoves)
                                 decisions.last().winWeight += futureMove.winWeight;
                         }

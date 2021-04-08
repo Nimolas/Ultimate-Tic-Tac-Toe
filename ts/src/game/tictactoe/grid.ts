@@ -139,17 +139,18 @@ class Grid extends GridObject {
             }
     }
 
-    setNodeForAI(xIndex: number, yIndex: number, currentPlayer: string): void {
-        let result = this.cells[xIndex][yIndex].setDrawTypeForAI(xIndex, yIndex, currentPlayer)
+    setNodeForAI(xCellIndex: number, yCellIndex: number, xNodeIndex: number, yNodeIndex: number, currentPlayer: string): boolean {
+        let result = this.cells[xCellIndex][yCellIndex].setDrawTypeForAI(xNodeIndex, yNodeIndex, currentPlayer)
 
         if (result.picked) {
             this.disableAllCells();
-            if (!this.cells[xIndex][yIndex].completed)
-                this.cells[xIndex][yIndex].active = true;
+            if (!this.cells[result.nodeX][result.nodeY].completed)
+                this.cells[result.nodeX][result.nodeY].active = true;
             else
                 this.activateAllNonCompletedCells();
-            return null;
+            return true;
         }
+        return false;
     }
 
     handleMouseEvents(): null {
@@ -176,7 +177,7 @@ class Grid extends GridObject {
 
     update(): void {
         this.handleMouseEvents();
-        if (this.checkWinState(false,this.cells))
+        if (this.checkWinState(false, this.cells))
             this.disableAllCells();
     }
 

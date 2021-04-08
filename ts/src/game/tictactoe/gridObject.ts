@@ -137,8 +137,8 @@ class GridObject extends GameObject {
                 this.completed = true;
                 this.active = false
             }
-            return won;
         }
+        return won;
     }
 }
 

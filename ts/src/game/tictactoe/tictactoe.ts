@@ -8,6 +8,7 @@ import { AI } from "./ai.js";
 class TicTacToe implements IGame {
     gameObjects: GameObject[] = [];
     ai: AI;
+    aiActive: boolean = false;
 
     constructor(version: string) {
 
@@ -29,8 +30,15 @@ class TicTacToe implements IGame {
     }
 
     update(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.update(this.gameObjects);
+        if (!this.aiActive) {
+            for (let gameObject of this.gameObjects) {
+                if (gameObject instanceof Grid)
+                    this.aiActive = gameObject.update(this.aiActive);
+                gameObject.update(this.gameObjects);
+            }
+        } else {
+            this.ai.update(this.gameObjects.last() as Grid)
+        }
 
         this.checkDelete();
     }

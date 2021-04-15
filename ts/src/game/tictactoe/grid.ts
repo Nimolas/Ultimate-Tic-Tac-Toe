@@ -153,7 +153,7 @@ class Grid extends GridObject {
         return false;
     }
 
-    handleMouseEvents(): null {
+    handleMouseEvents(): boolean {
         for (let mouseClick of Engine.mouseClickPositions) {
             if (Engine.playableArea.pointIntersects(mouseClick)) {
                 for (let xCells of this.cells) {
@@ -167,18 +167,25 @@ class Grid extends GridObject {
                                 this.cells[result.nodeX][result.nodeY].active = true;
                             else
                                 this.activateAllNonCompletedCells();
-                            return null;
+                            return true;
                         }
                     }
                 }
             }
         }
+
+        return false;
     }
 
-    update(): void {
-        this.handleMouseEvents();
-        if (this.checkWinState(false, this.cells))
-            this.disableAllCells();
+    update(aiActive: any): any {
+        if (!aiActive) {
+            aiActive = this.handleMouseEvents() == true ? true : false;
+
+            if (this.checkWinState(false, this.cells))
+                this.disableAllCells();
+        }
+
+        return aiActive;
     }
 
     draw() {

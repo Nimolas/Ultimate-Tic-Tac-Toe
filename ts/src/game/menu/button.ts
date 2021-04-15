@@ -30,7 +30,7 @@ class Button extends GameObject {
         return null; //Overwrite this in the thing calling it to control what it does;
     }
 
-    update() {
+    update(thing: any): any {
         this.handleMouseEvents();
     }
 

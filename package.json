@@ -1,8 +1,9 @@
 {
-  "devDependencies": {
-    "live-server": "^1.2.1"
-  },
+  "devDependencies": {},
   "scripts": {
     "build": "tsc --outDir ./build"
+  },
+  "dependencies": {
+    "live-server": "^1.2.1"
   }
 }

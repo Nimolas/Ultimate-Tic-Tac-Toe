@@ -39,7 +39,11 @@ class GameObject {
         return null;
     }
 
-    update(gameObjects: GameObject[]): void {
+    update(gameObjects: GameObject[]): void
+
+    update(aiActive: boolean): null
+
+    update(thing: any): any {
         return null;
     }
 

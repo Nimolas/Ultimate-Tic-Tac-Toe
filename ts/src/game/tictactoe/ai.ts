@@ -1,4 +1,5 @@
 import { PickedNode } from "./cell.js";
+import { Grid } from "./grid.js";
 
 interface AINode {
     x: number,
@@ -31,13 +32,59 @@ class AI {
 
     constructor(playerType: string) {
         this.playerType = playerType;
+
+
         this.decisions = {
             grid: this.createNewAIGrid(),
             winWeight: 0,
-            futureMoves: this.calculateMoves(playerType, 0, 5)
+            futureMoves: this.timeCalculatingMoves("Cross")
         }
-        console.log("AI Finished calculating move")
+
+    }
+
+    timeCalculatingMoves(playerType: string): DecisionNode[] {
+        let timeBefore = Date.now();
+
+        console.log("AI calculating moves")
+        let moves = this.calculateMoves(playerType, 0, 5)
+
+        let timeDiff = Date.now() - timeBefore;
+
+        console.log("AI Finished calculating moves")
+        console.log(`Time Taken ${(timeDiff / 1000).toFixed(2)}`)
         console.log(this.decisions);
+
+        return moves;
+    }
+
+    update(gridState: Grid) {
+        let nextMove: DecisionNode;
+
+        for (let move of this.decisions.futureMoves) {
+            if (this.compareGridStates(gridState, move))
+                console.log("Found move")
+        }
+        console.log("Didn't find move")
+    }
+
+    compareGridStates(gridState: Grid, move: DecisionNode): boolean {
+        for (let cellX = 0; cellX < 3; cellX++) {
+            for (let cellY = 0; cellY < 3; cellY++) {
+                if (gridState.cells[cellX][cellY].active != move.grid.cells[cellX][cellY].active ||
+                    gridState.cells[cellX][cellY].completed != move.grid.cells[cellX][cellY].completed ||
+                    gridState.cells[cellX][cellY].drawType != move.grid.cells[cellX][cellY].drawType)
+                    return false;
+
+                for (let nodeX = 0; nodeX < 3; nodeX++) {
+                    for (let nodeY = 0; nodeY < 3; nodeY++) {
+                        if (gridState.cells[cellX][cellY].drawType != move.grid.cells[cellX][cellY].drawType)
+                            return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     createNewAIGrid(): AIGrid {

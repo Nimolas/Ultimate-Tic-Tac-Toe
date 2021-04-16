@@ -37,7 +37,7 @@ class TicTacToe implements IGame {
                 gameObject.update(this.gameObjects);
             }
         } else {
-            this.ai.update(this.gameObjects.last() as Grid)
+            this.aiActive = this.ai.update(this.gameObjects.last() as Grid)
         }
 
         this.checkDelete();

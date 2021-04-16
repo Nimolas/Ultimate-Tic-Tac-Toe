@@ -24,6 +24,10 @@ interface DecisionNode {
     grid: AIGrid;
     winWeight: number;
     futureMoves?: DecisionNode[];
+    cellX: number;
+    cellY: number;
+    nodeX: number;
+    nodeY: number;
 }
 
 class AI {
@@ -33,58 +37,109 @@ class AI {
     constructor(playerType: string) {
         this.playerType = playerType;
 
-
         this.decisions = {
             grid: this.createNewAIGrid(),
             winWeight: 0,
-            futureMoves: this.timeCalculatingMoves("Cross")
+            futureMoves: this.timeCalculatingMoves("Cross", 5),
+            cellX: 0,
+            cellY: 0,
+            nodeX: 0,
+            nodeY: 0
         }
 
     }
 
-    timeCalculatingMoves(playerType: string): DecisionNode[] {
+    timeCalculatingMoves(playerType: string, maxMoves: number, gridState: AIGrid = this.createNewAIGrid()): DecisionNode[] {
         let timeBefore = Date.now();
 
         console.log("AI calculating moves")
-        let moves = this.calculateMoves(playerType, 0, 5)
+        let moves = this.calculateMoves(playerType, 0, maxMoves, gridState)
 
         let timeDiff = Date.now() - timeBefore;
 
         console.log("AI Finished calculating moves")
-        console.log(`Time Taken ${(timeDiff / 1000).toFixed(2)}`)
-        console.log(this.decisions);
+        console.log(`Time Taken ${(timeDiff / 1000).toFixed(2)} seconds`)
+        console.log(moves);
 
         return moves;
     }
 
-    update(gridState: Grid) {
-        let nextMove: DecisionNode;
+    update(gridState: Grid): boolean {
+        let found: boolean = false;
+        let count: number = 0;
 
-        for (let move of this.decisions.futureMoves) {
-            if (this.compareGridStates(gridState, move))
-                console.log("Found move")
+        while (!found && count < this.decisions.futureMoves.length) {
+            if (this.compareGridStates(gridState, this.decisions.futureMoves[count])) {
+                found = true;
+                this.decisions.futureMoves[0] = this.decisions.futureMoves[count]
+                this.decisions.futureMoves.splice(1, this.decisions.futureMoves.length - 1);
+            }
+            count++;
         }
-        console.log("Didn't find move")
+
+        if (!found)
+            throw new Error("Could not find the current board state in the AI's calculated moves")
+
+        if (this.decisions.futureMoves[0].futureMoves.length == 0) {
+            this.decisions.futureMoves[0].futureMoves = this.timeCalculatingMoves(this.playerType, 5, this.decisions.futureMoves[0].grid);
+        }
+
+        this.decisions.futureMoves[0].futureMoves.sort(futureMove => futureMove.winWeight) //Sort the futuremoves list to move the highest winning moveset to 0 index
+
+        this.decisions = this.decisions.futureMoves[0].futureMoves[0];
+
+        this.applyAIMoveToGrid(gridState);
+
+        let cellX = this.decisions.cellX;
+        let cellY = this.decisions.cellY;
+        let nodeX = this.decisions.nodeX;
+        let nodeY = this.decisions.nodeY;
+
+        if (this.playerType == "Cross")
+            gridState.cells[cellX][cellY].nodes[nodeX][nodeY].setDrawObjectAI("Cross");
+        else gridState.cells[cellX][cellY].nodes[nodeX][nodeY].setDrawObjectAI("Naught");
+
+        gridState.currentActivePlayer = this.playerType == "Naught" ? "Cross" : "Naught";
+
+        return false;
     }
 
-    compareGridStates(gridState: Grid, move: DecisionNode): boolean {
+    applyAIMoveToGrid(gridState: Grid) {
         for (let cellX = 0; cellX < 3; cellX++) {
             for (let cellY = 0; cellY < 3; cellY++) {
-                if (gridState.cells[cellX][cellY].active != move.grid.cells[cellX][cellY].active ||
-                    gridState.cells[cellX][cellY].completed != move.grid.cells[cellX][cellY].completed ||
-                    gridState.cells[cellX][cellY].drawType != move.grid.cells[cellX][cellY].drawType)
-                    return false;
+                gridState.cells[cellX][cellY].active = this.decisions.grid.cells[cellX][cellY].active
+                gridState.cells[cellX][cellY].completed = this.decisions.grid.cells[cellX][cellY].completed
+                gridState.cells[cellX][cellY].drawType = this.decisions.grid.cells[cellX][cellY].drawType
 
                 for (let nodeX = 0; nodeX < 3; nodeX++) {
                     for (let nodeY = 0; nodeY < 3; nodeY++) {
-                        if (gridState.cells[cellX][cellY].drawType != move.grid.cells[cellX][cellY].drawType)
-                            return false;
+                        gridState.cells[cellX][cellY].nodes[nodeX][nodeY].drawType = this.decisions.grid.cells[cellX][cellY].nodes[nodeX][nodeY].drawType
                     }
                 }
             }
         }
+    }
 
-        return true;
+    compareGridStates(gridState: Grid, move: DecisionNode): boolean {
+        let similarNodes: number = 0;
+
+        for (let cellX = 0; cellX < 3; cellX++) {
+            for (let cellY = 0; cellY < 3; cellY++) {
+                if (gridState.cells[cellX][cellY].active == move.grid.cells[cellX][cellY].active &&
+                    gridState.cells[cellX][cellY].completed == move.grid.cells[cellX][cellY].completed &&
+                    gridState.cells[cellX][cellY].drawType == move.grid.cells[cellX][cellY].drawType)
+
+
+                    for (let nodeX = 0; nodeX < 3; nodeX++) {
+                        for (let nodeY = 0; nodeY < 3; nodeY++) {
+                            if (gridState.cells[cellX][cellY].nodes[nodeX][nodeY].drawType == move.grid.cells[cellX][cellY].nodes[nodeX][nodeY].drawType)
+                                similarNodes++;
+                        }
+                    }
+            }
+        }
+
+        return similarNodes == 81 ? true : false; //9 cells each with 9 nodes within = 81 nodes
     }
 
     createNewAIGrid(): AIGrid {
@@ -140,14 +195,20 @@ class AI {
 
                         if (this.setNodeForAI(gridCopy, activeCell.xNode, activeCell.yNode, x, y, playerType)) {
 
-                            decisions.push({ grid: this.copyBoardState(gridCopy), winWeight: 0 })
+                            decisions.push({
+                                grid: this.copyBoardState(gridCopy),
+                                winWeight: 0, cellX: activeCell.xNode,
+                                cellY: activeCell.yNode,
+                                nodeX: x,
+                                nodeY: y
+                            })
 
-                            if (this.checkWinGrid(gridCopy, gridCopy.cells, playerType)) {
+                            if (this.checkWinGrid(gridCopy.cells, playerType)) {
                                 decisions.last().grid = this.copyBoardState(gridCopy);
                                 decisions.last().winWeight += 2;
                                 return decisions;
                             }
-                            else if (this.checkWinGrid(gridCopy, gridCopy.cells, this.playerType == "Naught" ? "Cross" : this.playerType)) {
+                            else if (this.checkWinGrid(gridCopy.cells, this.playerType == "Naught" ? "Cross" : this.playerType)) {
                                 decisions.last().grid = this.copyBoardState(gridCopy);
                                 return decisions;
                             }
@@ -234,7 +295,7 @@ class AI {
         return false;
     }
 
-    checkWinGrid(cell: AIGrid, cellObjects: AICell[][], playerType: string): boolean {
+    checkWinGrid(cellObjects: AICell[][], playerType: string): boolean {
         for (let x = 0; x < 3; x++) {
             if (cellObjects[x][0].drawType == playerType &&
                 cellObjects[x][1].drawType == playerType &&

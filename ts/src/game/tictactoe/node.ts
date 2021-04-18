@@ -90,9 +90,7 @@ class Node extends GridObject {
     }
 
     setDrawObjectAI(playerType: string) {
-        if (playerType == "Cross")
-            this.setDrawObject(this.generateCross(this.nodeMinMax))
-        else this.setDrawObject(this.generateNaught(this.nodeMinMax))
+        playerType == "Cross" ? this.setDrawObject(this.generateCross(this.nodeMinMax)) : this.setDrawObject(this.generateNaught(this.nodeMinMax))
     }
 
     setDrawType(AIActive: boolean, currentActivePlayer: string): boolean {

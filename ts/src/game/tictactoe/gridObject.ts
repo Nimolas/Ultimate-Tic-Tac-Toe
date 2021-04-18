@@ -50,16 +50,14 @@ class GridObject extends GameObject {
         }
     }
 
-    checkWin(AIActive: boolean, gridObjects: GridObject[][], playerType: string): boolean {
+    checkWin(gridObjects: GridObject[][], playerType: string): boolean {
         for (let x = 0; x < 3; x++) {
             if (gridObjects[x][0].drawType == playerType &&
                 gridObjects[x][1].drawType == playerType &&
                 gridObjects[x][2].drawType == playerType) {
 
-                if (!AIActive) {
-                    this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-                    this.drawObjects.push(this.generateWinLine(gridObjects[x][0].position, gridObjects[x][2].position, "Vertical"))
-                }
+                this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+                this.drawObjects.push(this.generateWinLine(gridObjects[x][0].position, gridObjects[x][2].position, "Vertical"))
 
                 this.winningPlayer = playerType;
                 this.drawType = playerType;
@@ -72,10 +70,8 @@ class GridObject extends GameObject {
                 gridObjects[1][y].drawType == playerType &&
                 gridObjects[2][y].drawType == playerType) {
 
-                if (!AIActive) {
-                    this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-                    this.drawObjects.push(this.generateWinLine(gridObjects[0][y].position, gridObjects[2][y].position, "Horizontal"))
-                }
+                this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+                this.drawObjects.push(this.generateWinLine(gridObjects[0][y].position, gridObjects[2][y].position, "Horizontal"))
 
                 this.winningPlayer = playerType;
                 this.drawType = playerType;
@@ -87,10 +83,8 @@ class GridObject extends GameObject {
             gridObjects[1][1].drawType == playerType &&
             gridObjects[2][2].drawType == playerType) {
 
-            if (!AIActive) {
-                this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-                this.drawObjects.push(this.generateWinLine(gridObjects[0][0].position, gridObjects[2][2].position, "TopBottomDiagonal"))
-            }
+            this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+            this.drawObjects.push(this.generateWinLine(gridObjects[0][0].position, gridObjects[2][2].position, "TopBottomDiagonal"))
 
             this.winningPlayer = playerType;
             this.drawType = playerType;
@@ -101,10 +95,8 @@ class GridObject extends GameObject {
             gridObjects[1][1].drawType == playerType &&
             gridObjects[2][0].drawType == playerType) {
 
-            if (!AIActive) {
-                this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
-                this.drawObjects.push(this.generateWinLine(gridObjects[0][2].position, gridObjects[2][0].position, "BottomTopDiagonal"))
-            }
+            this.drawObjects[0].fillColour = playerType == "Naught" ? this.naughtColour : this.crossColour;
+            this.drawObjects.push(this.generateWinLine(gridObjects[0][2].position, gridObjects[2][0].position, "BottomTopDiagonal"))
 
             this.winningPlayer = playerType;
             this.drawType = playerType;
@@ -126,11 +118,11 @@ class GridObject extends GameObject {
         return false;
     }
 
-    checkWinState(AIActive: boolean, gridObjects: GridObject[][]): boolean {
+    checkWinState(gridObjects: GridObject[][]): boolean {
         let won: boolean = false;
 
         if (!this.completed) {
-            if (this.checkWin(AIActive, gridObjects, "Naught") || this.checkWin(AIActive, gridObjects, "Cross"))
+            if (this.checkWin(gridObjects, "Naught") || this.checkWin(gridObjects, "Cross"))
                 won = true;
 
             if (won) {

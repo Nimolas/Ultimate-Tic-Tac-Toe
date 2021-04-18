@@ -16,7 +16,7 @@ class TicTacToe implements IGame {
             this.ai = new AI("Naught");
         }
 
-        this.gameObjects.push(new Grid(false, new Vector(Engine.playableArea.max.x / 2, Engine.playableArea.max.y / 2), this.gameObjects))
+        this.gameObjects.push(new Grid(new Vector(Engine.playableArea.max.x / 2, Engine.playableArea.max.y / 2), this.gameObjects))
     }
 
     destructor(): void {

@@ -9,55 +9,45 @@ class Grid extends GridObject {
     cells: Cell[][] = [];
     currentActivePlayer: string = "Cross";
 
-    constructor(AIActive: boolean, position?: Vector, gameObjects?: GameObject[]) {
+    constructor(position?: Vector, gameObjects?: GameObject[]) {
         super(position);
-        if (!AIActive) {
-            this.borderSize = 2;
+        this.borderSize = 2;
 
-            let xThird: number = (Engine.playableArea.max.x - Engine.playableArea.min.x) / 3;
-            let yThird: number = (Engine.playableArea.max.y - Engine.playableArea.min.y) / 3;
+        let xThird: number = (Engine.playableArea.max.x - Engine.playableArea.min.x) / 3;
+        let yThird: number = (Engine.playableArea.max.y - Engine.playableArea.min.y) / 3;
 
-            let minX: number = Engine.playableArea.min.x
-            let minY: number = Engine.playableArea.min.y
+        let minX: number = Engine.playableArea.min.x
+        let minY: number = Engine.playableArea.min.y
 
-            for (let x = 0; x < 3; x++) {
-                this.cells.push([]);
-                if (x > 0)
-                    minX = minX + xThird;
-                else minX = Engine.playableArea.min.x
+        for (let x = 0; x < 3; x++) {
+            this.cells.push([]);
+            if (x > 0)
+                minX = minX + xThird;
+            else minX = Engine.playableArea.min.x
 
-                let maxX: number = minX + xThird
+            let maxX: number = minX + xThird
 
-                for (let y = 0; y < 3; y++) {
-                    if (y > 0)
-                        minY = minY + yThird
-                    else minY = Engine.playableArea.min.y
+            for (let y = 0; y < 3; y++) {
+                if (y > 0)
+                    minY = minY + yThird
+                else minY = Engine.playableArea.min.y
 
-                    let maxY: number = minY + yThird
+                let maxY: number = minY + yThird
 
-                    let cellPos = new Vector(
-                        (minX + maxX) / 2,
-                        (minY + maxY) / 2
-                    )
+                let cellPos = new Vector(
+                    (minX + maxX) / 2,
+                    (minY + maxY) / 2
+                )
 
-                    let boundary: MinMax = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY))
+                let boundary: MinMax = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY))
 
-                    let cell: Cell = new Cell(AIActive, cellPos, boundary, gameObjects)
-                    gameObjects.push(cell);
-                    this.cells[x].push(cell);
-                }
-            }
-
-            this.setDrawObject(this.generateDrawObject(xThird, yThird))
-        } else {
-            for (let x = 0; x < 3; x++) {
-                this.cells.push([]);
-                for (let y = 0; y < 3; y++) {
-                    let cell: Cell = new Cell(AIActive);
-                    this.cells[x].push(cell);
-                }
+                let cell: Cell = new Cell(cellPos, boundary, gameObjects)
+                gameObjects.push(cell);
+                this.cells[x].push(cell);
             }
         }
+
+        this.setDrawObject(this.generateDrawObject(xThird, yThird))
     }
 
 
@@ -181,7 +171,7 @@ class Grid extends GridObject {
         if (!aiActive) {
             aiActive = this.handleMouseEvents() == true ? true : false;
 
-            if (this.checkWinState(false, this.cells))
+            if (this.checkWinState(this.cells))
                 this.disableAllCells();
         }
 

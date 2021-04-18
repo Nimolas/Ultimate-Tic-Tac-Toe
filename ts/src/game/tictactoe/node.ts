@@ -7,15 +7,14 @@ class Node extends GridObject {
     borderSize: number = 2;
     nodeMinMax: MinMax;
 
-    constructor(AIActive: boolean, position?: Vector, minMax?: MinMax) {
+    constructor(position: Vector, minMax: MinMax) {
         super(position);
 
-        if (!AIActive) {
-            this.nodeMinMax = minMax;
-            this.borderSize = 2;
+        this.nodeMinMax = minMax;
+        this.borderSize = 2;
 
-            this.setDrawObject([{ drawPoints: [new Vector(0, 0)] }])
-        }
+        this.setDrawObject([{ drawPoints: [new Vector(0, 0)] }])
+
     }
 
     generateCross(nodeMinMax: MinMax): DrawObject[] {
@@ -93,15 +92,13 @@ class Node extends GridObject {
         playerType == "Cross" ? this.setDrawObject(this.generateCross(this.nodeMinMax)) : this.setDrawObject(this.generateNaught(this.nodeMinMax))
     }
 
-    setDrawType(AIActive: boolean, currentActivePlayer: string): boolean {
+    setDrawType(currentActivePlayer: string): boolean {
         if (this.drawType == "") {
             this.drawType = currentActivePlayer;
 
-            if (!AIActive) {
-                if (this.drawType == "Cross")
-                    this.setDrawObject(this.generateCross(this.nodeMinMax))
-                else this.setDrawObject(this.generateNaught(this.nodeMinMax))
-            }
+            if (this.drawType == "Cross")
+                this.setDrawObject(this.generateCross(this.nodeMinMax))
+            else this.setDrawObject(this.generateNaught(this.nodeMinMax))
 
             return true;
         }

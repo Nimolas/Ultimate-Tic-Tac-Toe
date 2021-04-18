@@ -67,12 +67,13 @@ class AI {
     update(gridState: Grid): boolean {
         let found: boolean = false;
         let count: number = 0;
+        let playerMove: DecisionNode;
 
         while (!found && count < this.decisions.futureMoves.length) {
             if (this.compareGridStates(gridState, this.decisions.futureMoves[count])) {
                 found = true;
-                this.decisions.futureMoves[0] = this.decisions.futureMoves[count]
-                this.decisions.futureMoves.splice(1, this.decisions.futureMoves.length - 1);
+                playerMove = this.decisions.futureMoves[count]
+                this.decisions.futureMoves = [];
             }
             count++;
         }
@@ -80,13 +81,20 @@ class AI {
         if (!found)
             throw new Error("Could not find the current board state in the AI's calculated moves")
 
-        if (this.decisions.futureMoves[0].futureMoves.length == 0) {
-            this.decisions.futureMoves[0].futureMoves = this.timeCalculatingMoves(this.playerType, 5, this.decisions.futureMoves[0].grid);
+        if (playerMove.futureMoves.length == 0) {
+            playerMove.futureMoves = this.timeCalculatingMoves(this.playerType, 5, playerMove.grid);
         }
 
-        this.decisions.futureMoves[0].futureMoves.sort(futureMove => futureMove.winWeight) //Sort the futuremoves list to move the highest winning moveset to 0 index
+        playerMove.futureMoves.sort(futureMove => futureMove.winWeight) //Sort the futuremoves list to move the highest winning moveset to 0 index
 
-        this.decisions = this.decisions.futureMoves[0].futureMoves[0];
+        let sameWeightDecisions: DecisionNode[] = playerMove.futureMoves.filter(futureMove => futureMove.winWeight == playerMove.futureMoves[0].winWeight)
+
+        let index = (0).getRandomInt(0, sameWeightDecisions.length - 1)
+        this.decisions = sameWeightDecisions[index]
+
+        if (this.decisions.futureMoves.length == 0) {
+            this.decisions.futureMoves = this.timeCalculatingMoves(this.playerType == "Naught" ? "Cross" : "Naught", 5, this.decisions.grid);
+        }
 
         this.applyAIMoveToGrid(gridState);
 
@@ -218,9 +226,9 @@ class AI {
                                 return decisions;
                             }
                             else {
-                                let newGrid = this.copyBoardState(gridCopy);
+                                //let newGrid = this.copyBoardState(gridCopy);
                                 let playerMove = playerType == "Naught" ? "Cross" : "Naught";
-                                decisions[decisions.length - 1].futureMoves = this.calculateMoves(playerMove, currentMoveDepth + 1, maxMoveDepth, newGrid);
+                                decisions[decisions.length - 1].futureMoves = this.calculateMoves(playerMove, currentMoveDepth + 1, maxMoveDepth, gridCopy);
 
                                 for (let futureMove of decisions.last().futureMoves)
                                     decisions.last().winWeight += futureMove.winWeight;

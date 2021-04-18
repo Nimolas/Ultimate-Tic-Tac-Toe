@@ -4,8 +4,8 @@ declare global {
         removeElement(element: T): Array<T>;
     }
     interface Number {
-        getRandomInt(min: number, max: number): Number;
-        getRandomFloat(min: number, max: number): Number;
+        getRandomInt(min: number, max: number): number;
+        getRandomFloat(min: number, max: number): number;
     }
 }
 

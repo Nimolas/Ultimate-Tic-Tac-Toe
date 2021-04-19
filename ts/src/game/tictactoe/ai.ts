@@ -73,7 +73,9 @@ class AI {
             if (this.compareGridStates(gridState, this.decisions.futureMoves[count])) {
                 found = true;
                 playerMove = this.decisions.futureMoves[count]
-                this.decisions.futureMoves = [];
+                this.decisions.futureMoves.removeElements(0, count);
+                this.decisions.futureMoves.removeElements(count, this.decisions.futureMoves.length - count - 1);
+                //this.decisions.futureMoves = [];
             }
             count++;
         }
@@ -126,6 +128,8 @@ class AI {
                 }
             }
         }
+
+        gridState.checkWinCondition();
     }
 
     compareGridStates(gridState: Grid, move: DecisionNode): boolean {

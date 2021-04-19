@@ -167,12 +167,17 @@ class Grid extends GridObject {
         return false;
     }
 
+    checkWinCondition() {
+
+        if (this.checkWinState(this.cells))
+            this.disableAllCells();
+    }
+
     update(aiActive: any): any {
         if (!aiActive) {
             aiActive = this.handleMouseEvents() == true ? true : false;
 
-            if (this.checkWinState(this.cells))
-                this.disableAllCells();
+            this.checkWinCondition();
         }
 
         return aiActive;

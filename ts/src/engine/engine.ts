@@ -88,6 +88,17 @@ class Engine {
         Engine.context.restore();
     }
 
+    static *waitForSeconds(seconds: number): Generator {
+        let secsInMilli = seconds * 1000;
+        let now = Date.now();
+
+        while (Date.now() - now < secsInMilli)
+            yield null;
+
+        yield null;
+
+    }
+
     *checkForNextScene(): Generator {
         while (true) {
             if (Engine.scenes.length > 0) {

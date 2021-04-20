@@ -17,6 +17,8 @@ class TicTacToe implements IGame {
         }
 
         this.gameObjects.push(new Grid(new Vector(Engine.playableArea.max.x / 2, Engine.playableArea.max.y / 2), this.gameObjects))
+
+        Engine.startCoRoutine(this.ai.start(this.gameObjects.last() as Grid, this))
     }
 
     destructor(): void {
@@ -37,7 +39,7 @@ class TicTacToe implements IGame {
                 gameObject.update(this.gameObjects);
             }
         } else {
-            this.aiActive = this.ai.update(this.gameObjects.last() as Grid)
+            this.ai.update()
         }
 
         this.checkDelete();

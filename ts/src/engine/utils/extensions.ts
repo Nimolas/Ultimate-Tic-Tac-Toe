@@ -1,10 +1,11 @@
 declare global {
     interface Array<T> {
         last(): T;
+        empty(): void;
         removeElement(element: T): Array<T>;
         removeElements(startIndex: number, endIndex: number): Array<T>;
     }
-    interface Number {
+    interface NumberConstructor {
         getRandomInt(min: number, max: number): number;
         getRandomFloat(min: number, max: number): number;
     }
@@ -22,13 +23,17 @@ Array.prototype.removeElements = function (this: any[], index: number, amount: n
     return this.splice(index, amount)
 }
 
-Number.prototype.getRandomInt = function (min: number, max: number): number {
+Array.prototype.empty = function (this: any[]): any[] {
+    return this.removeElements(0, this.length);
+}
+
+Number.getRandomInt = function (min: number, max: number): number {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-Number.prototype.getRandomFloat = function (min: number, max: number): number {
+Number.getRandomFloat = function (min: number, max: number): number {
     return Math.random() * (max - min) + min;
 }
 

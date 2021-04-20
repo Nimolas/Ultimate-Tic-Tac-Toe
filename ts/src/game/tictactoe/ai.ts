@@ -46,7 +46,6 @@ class AI {
             nodeX: 0,
             nodeY: 0
         }
-
     }
 
     timeCalculatingMoves(playerType: string, maxMoves: number, gridState: AIGrid = this.createNewAIGrid()): DecisionNode[] {
@@ -73,9 +72,7 @@ class AI {
             if (this.compareGridStates(gridState, this.decisions.futureMoves[count])) {
                 found = true;
                 playerMove = this.decisions.futureMoves[count]
-                this.decisions.futureMoves.removeElements(0, count);
-                this.decisions.futureMoves.removeElements(count, this.decisions.futureMoves.length - count - 1);
-                //this.decisions.futureMoves = [];
+                this.decisions.futureMoves.empty();
             }
             count++;
         }
@@ -91,7 +88,7 @@ class AI {
 
         let sameWeightDecisions: DecisionNode[] = playerMove.futureMoves.filter(futureMove => futureMove.winWeight == playerMove.futureMoves[0].winWeight)
 
-        let index = (0).getRandomInt(0, sameWeightDecisions.length - 1)
+        let index = Number.getRandomInt(0, sameWeightDecisions.length - 1)
         this.decisions = sameWeightDecisions[index]
 
         if (this.decisions.futureMoves.length == 0) {
@@ -105,10 +102,11 @@ class AI {
         let nodeX = this.decisions.nodeX;
         let nodeY = this.decisions.nodeY;
 
-        if (this.playerType == "Cross")
-            gridState.cells[cellX][cellY].nodes[nodeX][nodeY].setDrawObjectAI("Cross");
-        else gridState.cells[cellX][cellY].nodes[nodeX][nodeY].setDrawObjectAI("Naught");
+        this.playerType == "Cross" ?
+            gridState.cells[cellX][cellY].nodes[nodeX][nodeY].setDrawObjectAI("Cross") :
+            gridState.cells[cellX][cellY].nodes[nodeX][nodeY].setDrawObjectAI("Naught");
 
+        gridState.checkWinCondition();
         gridState.currentActivePlayer = this.playerType == "Naught" ? "Cross" : "Naught";
 
         return false;
@@ -129,7 +127,6 @@ class AI {
             }
         }
 
-        gridState.checkWinCondition();
     }
 
     compareGridStates(gridState: Grid, move: DecisionNode): boolean {

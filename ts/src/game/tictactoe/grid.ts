@@ -168,6 +168,11 @@ class Grid extends GridObject {
     }
 
     checkWinCondition() {
+        for (let x = 0; x < 3; x++) {
+            for (let y = 0; y < 3; y++) {
+                this.cells[x][y].checkWinState(this.cells[x][y].nodes)
+            }
+        }
 
         if (this.checkWinState(this.cells))
             this.disableAllCells();

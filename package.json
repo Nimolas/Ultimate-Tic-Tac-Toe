@@ -1,7 +1,10 @@
 {
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  },
   "scripts": {
-    "build": "tsc --outDir ./build"
+    "build": "tsc --outDir ./build",
+    "run": "yarn run live-server"
   },
   "dependencies": {
     "live-server": "^1.2.1"

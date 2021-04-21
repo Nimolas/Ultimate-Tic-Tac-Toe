@@ -41,17 +41,6 @@ class AI {
 
     constructor(playerType: string) {
         this.playerType = playerType;
-
-        this.decisions = {
-            grid: this.createNewAIGrid(),
-            winWeight: 0,
-            winDepth: 0,
-            futureMoves: this.timeCalculatingMoves("Cross", 5),
-            cellX: 0,
-            cellY: 0,
-            nodeX: 0,
-            nodeY: 0
-        }
     }
 
     timeCalculatingMoves(playerType: string, maxMoves: number, gridState: AIGrid = this.createNewAIGrid()): DecisionNode[] {
@@ -65,6 +54,22 @@ class AI {
     }
 
     *start(gridState: Grid, game: TicTacToe): Generator {
+        this.decisions = {
+            grid: this.createNewAIGrid(),
+            winWeight: 0,
+            winDepth: 0,
+            futureMoves: [],
+            cellX: 0,
+            cellY: 0,
+            nodeX: 0,
+            nodeY: 0
+        }
+
+        while (this.compareGridStates(gridState, this.decisions))
+            yield null;
+
+        this.decisions.futureMoves = this.timeCalculatingMoves("Naught", 6, this.convertGridToAIGrid(gridState));
+
         while (!(game.gameObjects.last() as Grid).completed) {
             if (this.aiTurn) {
 
@@ -93,7 +98,7 @@ class AI {
                     playerMove.futureMoves = this.timeCalculatingMoves(this.playerType, 5, playerMove.grid);
                 }
 
-                playerMove.futureMoves.sort(futureMove => futureMove.winDepth);
+                playerMove.futureMoves.sort((a, b) => a.winDepth - b.winDepth);
                 let newFutureMoves = playerMove.futureMoves.filter(futureMove => futureMove.winDepth == playerMove.futureMoves[0].winDepth);
 
                 newFutureMoves.sort(futureMove => futureMove.winWeight); //Sort the futuremoves list to move the highest winning moveset to 0 index
@@ -168,6 +173,37 @@ class AI {
         }
 
         return similarNodes == 81 ? true : false; //9 cells each with 9 nodes within = 81 nodes
+    }
+
+    convertGridToAIGrid(gridState: Grid): AIGrid {
+        let grid: AIGrid = { cells: [] }
+
+        for (let x = 0; x < 3; x++) {
+            grid.cells.push([]);
+            for (let y = 0; y < 3; y++) {
+                grid.cells[x][y] = {
+                    active: gridState.cells[x][y].active,
+                    completed: gridState.cells[x][y].completed,
+                    drawType: gridState.cells[x][y].drawType,
+                    x: x,
+                    y: y,
+                    nodes: []
+                }
+
+                for (let xNode = 0; xNode < 3; xNode++) {
+                    grid.cells[x][y].nodes.push([]);
+                    for (let yNode = 0; yNode < 3; yNode++) {
+                        grid.cells[x][y].nodes[xNode][yNode] = {
+                            drawType: gridState.cells[x][y].nodes[xNode][yNode].drawType,
+                            x: xNode,
+                            y: yNode,
+                        }
+                    }
+                }
+            }
+        }
+
+        return grid;
     }
 
     createNewAIGrid(): AIGrid {

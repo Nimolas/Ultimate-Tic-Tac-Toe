@@ -4,6 +4,7 @@ declare global {
         empty(): void;
         removeElement(element: T): Array<T>;
         removeElements(startIndex: number, endIndex: number): Array<T>;
+        toJSONStrings(): string[];
     }
     interface NumberConstructor {
         getRandomInt(min: number, max: number): number;
@@ -25,6 +26,15 @@ Array.prototype.removeElements = function (this: any[], index: number, amount: n
 
 Array.prototype.empty = function (this: any[]): any[] {
     return this.removeElements(0, this.length);
+}
+
+Array.prototype.toJSONStrings = function (this: any[]): any[] {
+    let strings: string[] = [];
+
+    for (let object of this)
+        strings.push(JSON.stringify(object));
+
+    return strings;
 }
 
 Number.getRandomInt = function (min: number, max: number): number {

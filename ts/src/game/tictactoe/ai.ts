@@ -1,5 +1,4 @@
 import { Engine } from "../../engine/engine.js";
-import { IGame } from "../../engine/interfaces/iGame.js";
 import { PickedNode } from "./cell.js";
 import { Grid } from "./grid.js";
 import { TicTacToe } from "./tictactoe.js";
@@ -68,7 +67,17 @@ class AI {
         while (this.compareGridStates(gridState, this.decisions))
             yield null;
 
-        this.decisions.futureMoves = this.timeCalculatingMoves("Naught", 6, this.convertGridToAIGrid(gridState));
+        this.decisions.futureMoves = [
+            {
+                winDepth: 0,
+                grid: this.convertGridToAIGrid(gridState),
+                winWeight: 0,
+                futureMoves: [],
+                cellX: 0,
+                cellY: 0,
+                nodeX: 0,
+                nodeY: 0
+            }]
 
         while (!(game.gameObjects.last() as Grid).completed) {
             if (this.aiTurn) {

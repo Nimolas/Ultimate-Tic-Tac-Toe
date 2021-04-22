@@ -6,6 +6,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
+        "allowJs": true,
         "lib": [
             "ES2020",
             "DOM"
@@ -15,6 +16,6 @@
         "ts/**/*.ts"
     ],
     "exclude": [
-        "ts/tests/*/*.spec.ts"
-    ]
+        "t,s/tests/*/*.spec.ts"
+    ],
 }

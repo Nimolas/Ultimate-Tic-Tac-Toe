@@ -1,5 +1,5 @@
 import { IGame } from "./interfaces/iGame.js"
-import { DebugObject } from "./gameobjects/debugObject.js";
+import { DebugObject } from "./debug/debugObject.js";
 import { Vector } from "./utils/vector.js"
 import { MinMax } from "./gameobjects/minMax.js";
 

@@ -1,7 +1,7 @@
-import { GameObject, DrawObject } from './gameObject.js'
+import { GameObject, DrawObject } from '../gameobjects/gameObject.js'
 import { Engine } from '../engine.js'
 import { Vector } from '../utils/vector.js'
-import { MinMax } from './minMax.js';
+import { MinMax } from '../gameobjects/minMax.js';
 
 class DebugObject extends GameObject {
     lastTime: number = null;

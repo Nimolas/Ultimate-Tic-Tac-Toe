@@ -24,8 +24,8 @@ Array.prototype.removeElements = function (this: any[], index: number, amount: n
     return this.splice(index, amount)
 }
 
-Array.prototype.empty = function (this: any[]): any[] {
-    return this.removeElements(0, this.length);
+Array.prototype.empty = function (this: any[]): void {
+    this.removeElements(0, this.length);
 }
 
 Array.prototype.toJSONStrings = function (this: any[]): any[] {

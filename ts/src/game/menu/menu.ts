@@ -2,14 +2,17 @@ import { Engine } from "../../engine/engine.js";
 import { GameObject } from "../../engine/gameobjects/gameObject.js";
 import { Vector } from "../../engine/utils/vector.js";
 import { IGame } from "../../engine/interfaces/iGame.js"
-import { Button } from "./button.js";
+import { Button } from "../../engine/ui/button.js";
+import "../../engine/utils/extensions.js"
 import { TicTacToe } from "../tictactoe/tictactoe.js";
 
 
-class Menu implements IGame {
+class Menu extends IGame {
     gameObjects: GameObject[] = [];
 
     constructor() {
+        super();
+
         let playableDist: Vector = new Vector(
             Engine.playableArea.max.x - Engine.playableArea.min.x,
             Engine.playableArea.max.y - Engine.playableArea.min.y
@@ -27,14 +30,14 @@ class Menu implements IGame {
 
             ),
             dist,
-            "Local"))
+            "Local",
+            "#6D0AD0",
+            "#ffffff"))
 
         let localButton = this.gameObjects.last() as Button;
-        localButton.handleMouseEvents = () => {
-            for (let mouseEvent of Engine.mouseClickPositions)
-                if (localButton.minMax.pointIntersects(localButton.toLocalCoords(mouseEvent)))
-                    Engine.switchScene(new TicTacToe("AI"))
-        }
+        localButton.addMouseEvent(() => {
+            Engine.switchScene(new TicTacToe("AI"))
+        })
 
         this.gameObjects.push(new Button(
             new Vector(
@@ -43,36 +46,47 @@ class Menu implements IGame {
 
             ),
             dist,
-            "Online"))
+            "Online",
+            "#6D0AD0",
+            "#ffffff"))
 
         let onlineButton = this.gameObjects.last() as Button;
-        onlineButton.handleMouseEvents = () => {
-            for (let mouseEvent of Engine.mouseClickPositions)
-                if (onlineButton.minMax.pointIntersects(onlineButton.toLocalCoords(mouseEvent)))
-                    Engine.switchScene(new TicTacToe("Online"))
-        }
-    }
+        onlineButton.addMouseEvent(() => {
+            this.gameObjects.push(new Button(
+                new Vector(
+                    Engine.playableArea.min.x + (dist.x / 2),
+                    Engine.playableArea.min.y + ((dist.y / 2) + dist.y / 2)
 
-    destructor(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.destructor();
-    }
+                ),
+                dist,
+                "Host",
+                "#6D0AD0",
+                "#ffffff"))
 
-    checkDelete(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.checkDelete(this.gameObjects);
-    }
+            let hostButton = this.gameObjects.last() as Button;
+            hostButton.addMouseEvent(() => {
+                Engine.switchScene(new TicTacToe("Network:Host"))
+            })
 
-    update(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.update(this.gameObjects);
+            this.gameObjects.push(new Button(
+                new Vector(
+                    Engine.playableArea.min.x + (dist.x + (dist.x / 2)),
+                    Engine.playableArea.min.y + ((dist.y / 2) + dist.y / 2)
 
-        this.checkDelete();
-    }
+                ),
+                dist,
+                "Join",
+                "#6D0AD0",
+                "#ffffff"))
 
-    draw(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.draw();
+            let joinButton = this.gameObjects.last() as Button;
+            joinButton.addMouseEvent(() => {
+                Engine.switchScene(new TicTacToe("Network:Join"))
+            })
+
+            localButton.toDelete = true;
+            onlineButton.toDelete = true;
+        })
     }
 }
 

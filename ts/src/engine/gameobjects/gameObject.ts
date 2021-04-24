@@ -35,8 +35,11 @@ class GameObject {
         return this.minMax;
     }
 
-    checkDelete(gameObjects: GameObject[]): void {
-        return null;
+    checkDelete(gameObjects: GameObject[]): boolean {
+        if (this.toDelete)
+            return true;
+        return false;
+
     }
 
     update(gameObjects: GameObject[]): void

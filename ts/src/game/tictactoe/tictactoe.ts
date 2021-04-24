@@ -5,12 +5,12 @@ import { IGame } from "../../engine/interfaces/iGame.js";
 import { Grid } from "./grid.js";
 import { AI } from "./ai.js";
 
-class TicTacToe implements IGame {
-    gameObjects: GameObject[] = [];
+class TicTacToe extends IGame {
     ai: AI;
     aiActive: boolean = false;
 
     constructor(version: string) {
+        super();
 
         if (version == "AI") {
             this.ai = new AI("Naught");
@@ -19,16 +19,6 @@ class TicTacToe implements IGame {
         this.gameObjects.push(new Grid(new Vector(Engine.playableArea.max.x / 2, Engine.playableArea.max.y / 2), this.gameObjects))
 
         Engine.startCoRoutine(this.ai.start(this.gameObjects.last() as Grid, this))
-    }
-
-    destructor(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.destructor();
-    }
-
-    checkDelete(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.checkDelete(this.gameObjects);
     }
 
     update(): void {
@@ -43,11 +33,6 @@ class TicTacToe implements IGame {
         }
 
         this.checkDelete();
-    }
-
-    draw(): void {
-        for (let gameObject of this.gameObjects)
-            gameObject.draw();
     }
 }
 

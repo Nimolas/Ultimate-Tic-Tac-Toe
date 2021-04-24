@@ -99,6 +99,10 @@ class Engine {
 
     }
 
+    static *getLastMouseClick(): Generator<Vector> {
+        yield Engine.mouseClickPositions.pop();
+    }
+
     *checkForNextScene(): Generator {
         while (true) {
             if (Engine.scenes.length > 0) {
@@ -112,9 +116,19 @@ class Engine {
 
     *checkForUndefinedObjects(): Generator {
         while (true) {
-            for (let gameObject of this.game.gameObjects)
-                if (gameObject == undefined)
-                    this.game.gameObjects.removeElement(gameObject);
+            let changedSize: boolean = true;
+            while (changedSize) {
+                changedSize = false;
+
+                for (let gameObject of this.game.gameObjects) {
+
+                    if (gameObject == undefined) {
+
+                        this.game.gameObjects.removeElement(gameObject);
+                        changedSize = true;
+                    }
+                }
+            }
             yield null;
         }
     }

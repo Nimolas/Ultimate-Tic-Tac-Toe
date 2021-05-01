@@ -42,14 +42,14 @@ class Button extends GameObject {
     }
 
     handleMouseEvents(): void {
-        for (let mouseEvent of Engine.getLastMouseClick())
-            if (mouseEvent != undefined) {
-                if (this.minMax.pointIntersects(this.toLocalCoords(mouseEvent))) {
-                    for (let eventFunction of this.eventFunctions) {
-                        eventFunction.fn(...eventFunction.params)
-                    }
+        for (let mouseClick of Engine.getMouseClicks()) {
+            if (this.minMax.pointIntersects(this.toLocalCoords(mouseClick))) {
+                for (let eventFunction of this.eventFunctions) {
+                    eventFunction.fn(...eventFunction.params)
                 }
+                Engine.removeUsedMouseClick(mouseClick);
             }
+        }
     }
 
     update(thing: any): any {

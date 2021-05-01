@@ -164,6 +164,7 @@ class Cell extends GridObject {
                                 pickedNode.nodeX = x;
                                 pickedNode.nodeY = y;
                                 pickedNode.picked = true;
+                                return pickedNode;
                             }
                         }
                     }

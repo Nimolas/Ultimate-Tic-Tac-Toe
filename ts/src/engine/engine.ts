@@ -44,14 +44,18 @@ class Engine {
         this.gameLoop(0);
     }
 
+    removeGameCoRoutines() {
+        for (let coRoutine of Engine.coRoutines)
+            if (coRoutine.type == "Game")
+                Engine.coRoutines.removeElement(coRoutine);
+    }
+
     stop() {
         window.cancelAnimationFrame(this.frameId);
 
         this.runGame = false;
 
-        for (let coRoutine of Engine.coRoutines)
-            if (coRoutine.type == "Game")
-                Engine.coRoutines.removeElement(coRoutine);
+        this.removeGameCoRoutines();
 
         Engine.keys = [];
 
@@ -99,14 +103,10 @@ class Engine {
 
     }
 
-    static *getLastMouseClick(): Generator<Vector> {
-        yield Engine.mouseClickPositions.pop();
-    }
-
     *checkForNextScene(): Generator {
         while (true) {
             if (Engine.scenes.length > 0) {
-                stop();
+                this.stop();
                 this.setGame(Engine.scenes.last());
                 Engine.scenes.removeElement(Engine.scenes.last());
             }
@@ -137,6 +137,22 @@ class Engine {
         this.clearScreen();
         this.game.draw();
         this.drawDebug();
+    }
+
+    static getKeys() {
+        return Engine.keys;
+    }
+
+    static removeUsedKeys(key: string) {
+        Engine.keys.removeElement(key);
+    }
+
+    static getMouseClicks() {
+        return Engine.mouseClickPositions;
+    }
+
+    static removeUsedMouseClick(mouseClick: Vector) {
+        Engine.mouseClickPositions.removeElement(mouseClick);
     }
 
     drawDebug() {
@@ -177,11 +193,11 @@ class Engine {
     }
 
     checkDebug() {
-        for (let key of Engine.keys)
+        for (let key of Engine.getKeys())
             switch (key) {
                 case "q":
                     this.debug = !this.debug; //toggle debug mode
-                    Engine.keys.removeElement(key); //delete the key from the list, so other things can't use it's value. Stops two things from using one press
+                    Engine.removeUsedKeys(key); //delete the key from the list, so other things can't use it's value. Stops two things from using one press
                     break;
             }
     }

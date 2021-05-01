@@ -144,7 +144,7 @@ class Grid extends GridObject {
     }
 
     handleMouseEvents(): boolean {
-        for (let mouseClick of Engine.mouseClickPositions) {
+        for (let mouseClick of Engine.getMouseClicks()) {
             if (Engine.playableArea.pointIntersects(mouseClick)) {
                 for (let xCells of this.cells) {
                     for (let yCell of xCells) {
@@ -180,7 +180,7 @@ class Grid extends GridObject {
 
     update(aiActive: any): any {
         if (!aiActive) {
-            aiActive = this.handleMouseEvents() == true ? true : false;
+            aiActive = this.handleMouseEvents()
 
             this.checkWinCondition();
         }

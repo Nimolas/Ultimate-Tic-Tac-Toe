@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "AQv1eV37a7fZ5uFkMlnUJFClkREmRbiBP2qnEQkvl05ZVBTmqjNEPsvoyGQWYXVXiMuL5ZiYISXKXb/otC3KyQ==",
+  "success": true,
+  "projectFilePath": "F:\\Code\\Ultimate-Tic-Tac-Toe\\C-Sharp\\Ultimate-Tic-Tac-Toe\\Ultimate-Tic-Tac-Toe.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nykolas Bata\\.nuget\\packages\\csfml\\2.5.0\\csfml.2.5.0.nupkg.sha512",
+    "C:\\Users\\Nykolas Bata\\.nuget\\packages\\sfml.audio\\2.5.0\\sfml.audio.2.5.0.nupkg.sha512",
+    "C:\\Users\\Nykolas Bata\\.nuget\\packages\\sfml.graphics\\2.5.0\\sfml.graphics.2.5.0.nupkg.sha512",
+    "C:\\Users\\Nykolas Bata\\.nuget\\packages\\sfml.net\\2.5.0\\sfml.net.2.5.0.nupkg.sha512",
+    "C:\\Users\\Nykolas Bata\\.nuget\\packages\\sfml.system\\2.5.0\\sfml.system.2.5.0.nupkg.sha512",
+    "C:\\Users\\Nykolas Bata\\.nuget\\packages\\sfml.window\\2.5.0\\sfml.window.2.5.0.nupkg.sha512",
+    "C:\\Users\\Nykolas Bata\\.nuget\\packages\\ventillo.engine\\0.0.1\\ventillo.engine.0.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

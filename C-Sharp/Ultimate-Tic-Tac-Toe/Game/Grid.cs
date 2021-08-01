@@ -53,10 +53,10 @@ namespace Ultimate_Tic_Tac_Toe.Game
                     cells.ElementAt(xIndex).Add(cell);
                 }
             }
-            this.SetDrawObject(generateDrawObject(xThird, yThird));
+            this.SetDrawObject(GenerateDrawObject(xThird, yThird));
         }
 
-        List<DrawObject> generateDrawObject(double xThird, double yThird)
+        List<DrawObject> GenerateDrawObject(double xThird, double yThird)
         {
             var firstBarPos = this.ToLocalCoords(
                 new Vector(
@@ -123,7 +123,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return drawobjects;
         }
 
-        void swapActivePlayer()
+        void SwapActivePlayer()
         {
             if (currentActivePlayer == "Naught")
             {
@@ -132,7 +132,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             else currentActivePlayer = "Naught";
         }
 
-        void disableAllCells()
+        void DisableAllCells()
         {
             foreach (var cells in this.cells)
             {
@@ -143,7 +143,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
         }
 
-        void activateAllNonCompletedCells()
+        void ActivateAllNonCompletedCells()
         {
             foreach (var cells in this.cells)
             {
@@ -157,46 +157,46 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
         }
 
-        bool setNodeForAI(int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
+        bool SetNodeForAI(int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
         {
             var result = cells.ElementAt(xCellIndex).ElementAt(yCellIndex).setDrawTypeForAI(xNodeIndex, yNodeIndex, currentPlayer);
 
             if (result.picked)
             {
-                this.disableAllCells();
+                DisableAllCells();
                 if (!cells.ElementAt(result.nodeX).ElementAt(result.nodeY).completed)
                 {
                     cells.ElementAt(result.nodeX).ElementAt(result.nodeY).active = true;
                 }
-                else this.activateAllNonCompletedCells();
+                else ActivateAllNonCompletedCells();
 
                 return true;
             }
             return false;
         }
 
-        bool handleMouseEvents()
+        bool HandleMouseEvents()
         {
             foreach (var mouseClick in Engine.mouseClickPositions)
             {
-                if (Engine.playableArea.pointIntersects(mouseClick))
+                if (Engine.playableArea.PointIntersects(mouseClick))
                 {
                     foreach (var xCell in cells)
                     {
                         foreach (var yCell in xCell)
                         {
-                            var result = yCell.handleMouseEvent(mouseClick, currentActivePlayer);
+                            var result = yCell.HandleMouseEvent(mouseClick, currentActivePlayer);
 
                             if (result.picked)
                             {
-                                swapActivePlayer();
-                                disableAllCells();
+                                SwapActivePlayer();
+                                DisableAllCells();
 
                                 if (!cells.ElementAt(result.nodeX).ElementAt(result.nodeY).completed)
                                 {
                                     cells.ElementAt(result.nodeX).ElementAt(result.nodeY).active = true;
                                 }
-                                else activateAllNonCompletedCells();
+                                else ActivateAllNonCompletedCells();
 
                                 return true;
                             }
@@ -207,7 +207,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return false;
         }
 
-        void checkWinCondition()
+        void CheckWinCondition()
         {
             for (var xIndex = 0; xIndex < 3; xIndex++)
             {
@@ -215,23 +215,23 @@ namespace Ultimate_Tic_Tac_Toe.Game
                 {
                     var cell = cells.ElementAt(xIndex).ElementAt(yIndex);
 
-                    cell.checkWinState(cell.nodes);
+                    cell.CheckWinState(cell.nodes);
                 }
             }
 
-            if (checkWinState(cells))
+            if (CheckWinState(cells))
             {
-                disableAllCells();
+                DisableAllCells();
             }
         }
 
-        bool update(bool aiActive)
+        bool Update(bool aiActive)
         {
             if (!aiActive)
             {
-                aiActive = handleMouseEvents() == true ? true : false;
+                aiActive = HandleMouseEvents() == true ? true : false;
 
-                checkWinCondition();
+                CheckWinCondition();
             }
 
             return aiActive;

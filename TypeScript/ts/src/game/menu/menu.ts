@@ -40,7 +40,6 @@ class Menu implements IGame {
             new Vector(
                 Engine.playableArea.min.x + (dist.x + (dist.x / 2)),
                 Engine.playableArea.min.y + ((dist.y / 2) + dist.y / 2)
-
             ),
             dist,
             "Online"))

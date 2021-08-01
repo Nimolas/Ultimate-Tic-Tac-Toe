@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ventillo.Engine" Version="0.0.2-beta4" />
+    <PackageReference Include="Ventillo.Engine" Version="0.0.2-beta9" />
   </ItemGroup>
 
 </Project>

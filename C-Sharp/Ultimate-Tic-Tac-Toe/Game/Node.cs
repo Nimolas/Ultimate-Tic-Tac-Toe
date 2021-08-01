@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 
 using Ventillo.System;
 using Ventillo.GameObjects;
+using SFML.Graphics;
+using SFML.System;
+using Ventillo.Utils;
+using Ventillo;
+
+using Color = Ventillo.System.Color;
 
 namespace Ultimate_Tic_Tac_Toe.Game
 {
-    class Node : GridObject
+    internal class Node : GridObject
     {
-        MinMax nodeMinmax;
-        Node(Vector position, MinMax minMax) : base(position)
+        internal MinMax nodeMinMax;
+        internal Node(Vector position, MinMax minMax) : base(position)
         {
-            nodeMinmax = minMax;
+            nodeMinMax = minMax;
             this.borderSize = 2;
 
             this.SetDrawObject(new List<DrawObject>(){
@@ -30,14 +36,14 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
         List<DrawObject> GenerateCross(MinMax nodeMinMax)
         {
-            nodeMinmax = new MinMax(
-                ToLocalCoords(nodeMinmax.Min),
-                ToLocalCoords(nodeMinmax.Max)
+            nodeMinMax = new MinMax(
+                ToLocalCoords(nodeMinMax.Min),
+                ToLocalCoords(nodeMinMax.Max)
             );
 
-            nodeMinmax = new MinMax(
-                new Vector(nodeMinmax.Min.x * 0.7, nodeMinmax.Min.y * 0.7),
-                new Vector(nodeMinmax.Max.x * 0.7, nodeMinmax.Max.y * 0.7)
+            nodeMinMax = new MinMax(
+                new Vector(nodeMinMax.Min.x * 0.7, nodeMinMax.Min.y * 0.7),
+                new Vector(nodeMinMax.Max.x * 0.7, nodeMinMax.Max.y * 0.7)
             );
 
             var drawObjects = new List<DrawObject>(){
@@ -109,38 +115,41 @@ namespace Ultimate_Tic_Tac_Toe.Game
         {
             if (playerType == "Cross")
             {
-                SetDrawObject(GenerateCross(nodeMinmax));
+                SetDrawObject(GenerateCross(nodeMinMax));
             }
             else
             {
-                SetDrawObject(GenerateNaught(nodeMinmax));
+                SetDrawObject(GenerateNaught(nodeMinMax));
             }
         }
 
-        bool SetDrawType(string currentActivePlayer)
+        internal bool SetDrawType(string currentActivePlayer)
         {
             if (this.drawType == "")
             {
                 this.drawType = currentActivePlayer;
-            }
 
-            if (this.drawType == "Cross")
-            {
-                SetDrawObject(GenerateCross(nodeMinmax));
+
+                if (this.drawType == "Cross")
+                {
+                    SetDrawObject(GenerateCross(nodeMinMax));
+                }
+                else
+                {
+                    SetDrawObject(GenerateNaught(nodeMinMax));
+                }
+                return true;
             }
-            else
-            {
-                SetDrawObject(GenerateNaught(nodeMinmax));
-            }
+            return false;
         }
 
         public override void Draw()
         {
-            if (this.drawType == "Cross")
+            if (drawType == "Cross")
             {
                 DrawByLine();
             }
-            else
+            else if (drawType == "Naught")
             {
                 DrawByCircle();
             }

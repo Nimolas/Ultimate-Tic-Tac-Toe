@@ -83,3 +83,4 @@ F:\Code\Ultimate-Tic-Tac-Toe\C-Sharp\Ultimate-Tic-Tac-Toe\obj\x64\Debug\net5.0\U
 F:\Code\Ultimate-Tic-Tac-Toe\C-Sharp\Ultimate-Tic-Tac-Toe\obj\x64\Debug\net5.0\ref\Ultimate-Tic-Tac-Toe.dll
 F:\Code\Ultimate-Tic-Tac-Toe\C-Sharp\Ultimate-Tic-Tac-Toe\obj\x64\Debug\net5.0\Ultimate-Tic-Tac-Toe.pdb
 F:\Code\Ultimate-Tic-Tac-Toe\C-Sharp\Ultimate-Tic-Tac-Toe\obj\x64\Debug\net5.0\Ultimate-Tic-Tac-Toe.genruntimeconfig.cache
+F:\Code\Ultimate-Tic-Tac-Toe\C-Sharp\Ultimate-Tic-Tac-Toe\obj\x64\Debug\net5.0\Ultimate-Tic-Tac-Toe.csproj.AssemblyReference.cache

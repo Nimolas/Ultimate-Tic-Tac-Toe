@@ -12,9 +12,8 @@ namespace Ultimate_Tic_Tac_Toe.Game
 {
     internal class Grid : GridObject
     {
-        List<List<Cell>> cells = new List<List<Cell>>();
+        protected List<List<Cell>> cells = new List<List<Cell>>();
         string currentActivePlayer = "Cross";
-        int borderSize = 2;
         internal Grid(Vector position, List<GameObject> gameObjects) : base(position)
         {
             var xThird = (Engine.playableArea.Max.x - Engine.playableArea.Min.x) / 3;
@@ -134,7 +133,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
         void DisableAllCells()
         {
-            foreach (var cells in this.cells)
+            foreach (var cells in cells)
             {
                 foreach (var cell in cells)
                 {
@@ -159,7 +158,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
         bool SetNodeForAI(int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
         {
-            var result = cells.ElementAt(xCellIndex).ElementAt(yCellIndex).setDrawTypeForAI(xNodeIndex, yNodeIndex, currentPlayer);
+            var result = cells.ElementAt(xCellIndex).ElementAt(yCellIndex).SetDrawTypeForAI(xNodeIndex, yNodeIndex, currentPlayer);
 
             if (result.picked)
             {
@@ -185,7 +184,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                     {
                         foreach (var yCell in xCell)
                         {
-                            var result = yCell.HandleMouseEvent(mouseClick, currentActivePlayer);
+                            var result = yCell.HandleMouseEvents(mouseClick, currentActivePlayer);
 
                             if (result.picked)
                             {
@@ -225,7 +224,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
         }
 
-        bool Update(bool aiActive)
+        internal bool Update(bool aiActive)
         {
             if (!aiActive)
             {
@@ -235,6 +234,11 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
 
             return aiActive;
+        }
+
+        public override void Draw()
+        {
+            DrawByLine(DrawObjects);
         }
     }
 }

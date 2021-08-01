@@ -24,7 +24,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
     }
     internal class Cell : GridObject
     {
-        List<List<Node>> nodes = new List<List<Node>>();
+        internal List<List<Node>> nodes = new List<List<Node>>();
         MinMax cellMinMax;
         internal Cell(Vector position, MinMax cellMinMax, List<GameObject> gameObjects) : base(position)
         {
@@ -152,7 +152,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return drawObjects;
         }
 
-        PickedNode SetDrawTypeForAI(int xIndex, int yIndex, string currentActivePlayer)
+        internal PickedNode SetDrawTypeForAI(int xIndex, int yIndex, string currentActivePlayer)
         {
             var pickedNode = new PickedNode(xIndex, yIndex, false);
 
@@ -165,11 +165,11 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return pickedNode;
         }
 
-        PickedNode HandleMouseEvents(Vector mouseClick, string currentActivePlayer)
+        internal PickedNode HandleMouseEvents(Vector mouseClick, string currentActivePlayer)
         {
             var pickedNode = new PickedNode(-1, -1, false);
 
-            if (!this.active)
+            if (this.active)
             {
                 if (cellMinMax.PointIntersects(mouseClick))
                 {
@@ -202,7 +202,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             {
                 this.DrawByLine(this.DrawObjects.GetRange(0, 1));
             }
-            this.DrawByLine(this.DrawObjects.GetRange(1, this.DrawObjects.Count));
+            this.DrawByLine(this.DrawObjects.GetRange(1, this.DrawObjects.Count - 1));
         }
     }
 }

@@ -46,7 +46,7 @@
           "dependencies": {
             "Ventillo.Engine": {
               "target": "Package",
-              "version": "[0.0.2-beta5, )"
+              "version": "[0.0.2-beta9, )"
             }
           },
           "imports": [

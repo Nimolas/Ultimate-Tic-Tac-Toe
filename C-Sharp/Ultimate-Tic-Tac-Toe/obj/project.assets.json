@@ -302,7 +302,7 @@
           "lib/netstandard2.0/SFML.Window.dll": {}
         }
       },
-      "Ventillo.Engine/0.0.2-beta5": {
+      "Ventillo.Engine/0.0.2-beta9": {
         "type": "package",
         "dependencies": {
           "SFML.Net": "2.5.0"
@@ -487,10 +487,10 @@
         "sfml.window.nuspec"
       ]
     },
-    "Ventillo.Engine/0.0.2-beta5": {
-      "sha512": "YSXHtfv6UcQUYCnr8BwdeZg1RdHrLs5oJ7W1uc4KYMsLxdACAQaB94+FsasrG8rSESy4u+HHZsjNlJtkRJpyow==",
+    "Ventillo.Engine/0.0.2-beta9": {
+      "sha512": "fTEw8Hv3kGl++q1ZdyTRcyEZjOdIwn0hZuLSKdRg8HsijVZEwJX1WZiv6++SDEetL4F6RUa627zYM2e9iw4Qow==",
       "type": "package",
-      "path": "ventillo.engine/0.0.2-beta5",
+      "path": "ventillo.engine/0.0.2-beta9",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -507,14 +507,14 @@
         "contentFiles/any/any/debug/fonts/GIL_____.TTF",
         "contentFiles/any/any/debug/fonts/GLSNECB.TTF",
         "lib/net5.0/Ventillo.dll",
-        "ventillo.engine.0.0.2-beta5.nupkg.sha512",
+        "ventillo.engine.0.0.2-beta9.nupkg.sha512",
         "ventillo.engine.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "Ventillo.Engine >= 0.0.2-beta5"
+      "Ventillo.Engine >= 0.0.2-beta9"
     ]
   },
   "packageFolders": {
@@ -563,7 +563,7 @@
         "dependencies": {
           "Ventillo.Engine": {
             "target": "Package",
-            "version": "[0.0.2-beta5, )"
+            "version": "[0.0.2-beta9, )"
           }
         },
         "imports": [

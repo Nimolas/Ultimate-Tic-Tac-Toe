@@ -16,4 +16,72 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Content Include="$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILBI___.TTF" Condition="Exists('$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILBI___.TTF')">
+      <NuGetPackageId>Ventillo.Engine</NuGetPackageId>
+      <NuGetPackageVersion>0.0.2-beta4</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>debug\fonts\GILBI___.TTF</TargetPath>
+      <DestinationSubDirectory>debug\fonts\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>debug\fonts\GILBI___.TTF</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILB____.TTF" Condition="Exists('$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILB____.TTF')">
+      <NuGetPackageId>Ventillo.Engine</NuGetPackageId>
+      <NuGetPackageVersion>0.0.2-beta4</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>debug\fonts\GILB____.TTF</TargetPath>
+      <DestinationSubDirectory>debug\fonts\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>debug\fonts\GILB____.TTF</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILC____.TTF" Condition="Exists('$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILC____.TTF')">
+      <NuGetPackageId>Ventillo.Engine</NuGetPackageId>
+      <NuGetPackageVersion>0.0.2-beta4</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>debug\fonts\GILC____.TTF</TargetPath>
+      <DestinationSubDirectory>debug\fonts\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>debug\fonts\GILC____.TTF</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILI____.TTF" Condition="Exists('$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GILI____.TTF')">
+      <NuGetPackageId>Ventillo.Engine</NuGetPackageId>
+      <NuGetPackageVersion>0.0.2-beta4</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>debug\fonts\GILI____.TTF</TargetPath>
+      <DestinationSubDirectory>debug\fonts\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>debug\fonts\GILI____.TTF</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GIL_____.TTF" Condition="Exists('$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GIL_____.TTF')">
+      <NuGetPackageId>Ventillo.Engine</NuGetPackageId>
+      <NuGetPackageVersion>0.0.2-beta4</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>debug\fonts\GIL_____.TTF</TargetPath>
+      <DestinationSubDirectory>debug\fonts\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>debug\fonts\GIL_____.TTF</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GLSNECB.TTF" Condition="Exists('$(NuGetPackageRoot)ventillo.engine\0.0.2-beta4\contentFiles\any\any\debug\fonts\GLSNECB.TTF')">
+      <NuGetPackageId>Ventillo.Engine</NuGetPackageId>
+      <NuGetPackageVersion>0.0.2-beta4</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>debug\fonts\GLSNECB.TTF</TargetPath>
+      <DestinationSubDirectory>debug\fonts\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>debug\fonts\GLSNECB.TTF</Link>
+    </Content>
+  </ItemGroup>
 </Project>

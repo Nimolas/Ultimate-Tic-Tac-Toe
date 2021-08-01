@@ -302,7 +302,7 @@
           "lib/netstandard2.0/SFML.Window.dll": {}
         }
       },
-      "Ventillo.Engine/0.0.1": {
+      "Ventillo.Engine/0.0.2-beta4": {
         "type": "package",
         "dependencies": {
           "SFML.Net": "2.5.0"
@@ -312,6 +312,44 @@
         },
         "runtime": {
           "lib/net5.0/Ventillo.dll": {}
+        },
+        "contentFiles": {
+          "contentFiles/any/any/debug/fonts/GILBI___.TTF": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": true,
+            "outputPath": "debug/fonts/GILBI___.TTF"
+          },
+          "contentFiles/any/any/debug/fonts/GILB____.TTF": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": true,
+            "outputPath": "debug/fonts/GILB____.TTF"
+          },
+          "contentFiles/any/any/debug/fonts/GILC____.TTF": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": true,
+            "outputPath": "debug/fonts/GILC____.TTF"
+          },
+          "contentFiles/any/any/debug/fonts/GILI____.TTF": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": true,
+            "outputPath": "debug/fonts/GILI____.TTF"
+          },
+          "contentFiles/any/any/debug/fonts/GIL_____.TTF": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": true,
+            "outputPath": "debug/fonts/GIL_____.TTF"
+          },
+          "contentFiles/any/any/debug/fonts/GLSNECB.TTF": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": true,
+            "outputPath": "debug/fonts/GLSNECB.TTF"
+          }
         }
       }
     }
@@ -449,22 +487,34 @@
         "sfml.window.nuspec"
       ]
     },
-    "Ventillo.Engine/0.0.1": {
-      "sha512": "UCtKc6KGFiisqZyrzpq7DfRzPRNA0vhTxnniFmx7MrCpwtiQY0cog9tqP40laYQuvuNgPwp7TeCSthJMZZP6lw==",
+    "Ventillo.Engine/0.0.2-beta4": {
+      "sha512": "UEBSzhCmuz2EZbq4MmZLUcJb227VQQ848yg2/oBvRrZR/jXlgKhAy6f/2gfN+Sze3oQUDpYZ9iudp+Fdo95ZMQ==",
       "type": "package",
-      "path": "ventillo.engine/0.0.1",
+      "path": "ventillo.engine/0.0.2-beta4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "content/any/any/debug/fonts/GILBI___.TTF",
+        "content/any/any/debug/fonts/GILB____.TTF",
+        "content/any/any/debug/fonts/GILC____.TTF",
+        "content/any/any/debug/fonts/GILI____.TTF",
+        "content/any/any/debug/fonts/GIL_____.TTF",
+        "content/any/any/debug/fonts/GLSNECB.TTF",
+        "contentFiles/any/any/debug/fonts/GILBI___.TTF",
+        "contentFiles/any/any/debug/fonts/GILB____.TTF",
+        "contentFiles/any/any/debug/fonts/GILC____.TTF",
+        "contentFiles/any/any/debug/fonts/GILI____.TTF",
+        "contentFiles/any/any/debug/fonts/GIL_____.TTF",
+        "contentFiles/any/any/debug/fonts/GLSNECB.TTF",
         "lib/net5.0/Ventillo.dll",
-        "ventillo.engine.0.0.1.nupkg.sha512",
+        "ventillo.engine.0.0.2-beta4.nupkg.sha512",
         "ventillo.engine.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "Ventillo.Engine >= 0.0.1"
+      "Ventillo.Engine >= 0.0.2-beta4"
     ]
   },
   "packageFolders": {
@@ -513,7 +563,7 @@
         "dependencies": {
           "Ventillo.Engine": {
             "target": "Package",
-            "version": "[0.0.1, )"
+            "version": "[0.0.2-beta4, )"
           }
         },
         "imports": [

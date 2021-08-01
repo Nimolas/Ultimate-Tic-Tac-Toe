@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Ventillo;
+using Ventillo.System;
 using Ventillo.Interfaces;
 
 namespace Ultimate_Tic_Tac_Toe.Game
 {
-    class TicTacToe : IGame
+    internal class TicTacToe : IGame
     {
-        TicTacToe()
+        internal TicTacToe()
         {
-            gameObjects.Add(new Grid());
+            gameObjects.Add(new Grid(new Vector(Engine.playableArea.Max.x / 2, Engine.playableArea.Max.y / 2), gameObjects));
         }
 
         ~TicTacToe()

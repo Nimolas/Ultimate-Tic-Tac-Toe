@@ -52,19 +52,20 @@ namespace Ultimate_Tic_Tac_Toe.Game
                     cells.ElementAt(xIndex).Add(cell);
                 }
             }
-            this.SetDrawObject(GenerateDrawObject(xThird, yThird));
+
+            SetDrawObject(GenerateDrawObject(xThird, yThird));
         }
 
         List<DrawObject> GenerateDrawObject(double xThird, double yThird)
         {
-            var firstBarPos = this.ToLocalCoords(
+            var firstBarPos = ToLocalCoords(
                 new Vector(
                     Engine.playableArea.Min.x + xThird,
                     Engine.playableArea.Min.y + yThird
                 )
             );
 
-            var secondBarPos = this.ToLocalCoords(
+            var secondBarPos = ToLocalCoords(
                 new Vector(
                     Engine.playableArea.Max.x - xThird,
                     Engine.playableArea.Max.y - yThird
@@ -76,10 +77,10 @@ namespace Ultimate_Tic_Tac_Toe.Game
                 new DrawObject(
                     new List<Vector>
                     {
-                        new Vector(firstBarPos.x - this.borderSize, Engine.playableArea.Min.y - this.Position.y),
-                        new Vector(firstBarPos.x + this.borderSize, Engine.playableArea.Min.y - this.Position.y),
-                        new Vector(firstBarPos.x + this.borderSize, Engine.playableArea.Max.y - this.Position.y),
-                        new Vector(firstBarPos.x - this.borderSize, Engine.playableArea.Max.y - this.Position.y),
+                        new Vector(firstBarPos.x - borderSize, Engine.playableArea.Min.y - Position.y),
+                        new Vector(firstBarPos.x + borderSize, Engine.playableArea.Min.y - Position.y),
+                        new Vector(firstBarPos.x + borderSize, Engine.playableArea.Max.y - Position.y),
+                        new Vector(firstBarPos.x - borderSize, Engine.playableArea.Max.y - Position.y),
                     },
                     new Color(109, 10, 208, 255),
                     new Color(234, 234, 234, 255)
@@ -87,10 +88,10 @@ namespace Ultimate_Tic_Tac_Toe.Game
                 new DrawObject(
                     new List<Vector>
                     {
-                        new Vector(secondBarPos.x - this.borderSize, Engine.playableArea.Min.y - this.Position.y),
-                        new Vector(secondBarPos.x + this.borderSize, Engine.playableArea.Min.y - this.Position.y),
-                        new Vector(secondBarPos.x + this.borderSize, Engine.playableArea.Max.y - this.Position.y),
-                        new Vector(secondBarPos.x - this.borderSize, Engine.playableArea.Max.y - this.Position.y),
+                        new Vector(secondBarPos.x - borderSize, Engine.playableArea.Min.y - Position.y),
+                        new Vector(secondBarPos.x + borderSize, Engine.playableArea.Min.y - Position.y),
+                        new Vector(secondBarPos.x + borderSize, Engine.playableArea.Max.y - Position.y),
+                        new Vector(secondBarPos.x - borderSize, Engine.playableArea.Max.y - Position.y),
                     },
                     new Color(109, 10, 208, 255),
                     new Color(234, 234, 234, 255)
@@ -98,10 +99,10 @@ namespace Ultimate_Tic_Tac_Toe.Game
                 new DrawObject(
                     new List<Vector>
                     {
-                        new Vector(Engine.playableArea.Min.x - this.Position.x, firstBarPos.y - this.borderSize),
-                        new Vector(Engine.playableArea.Max.x - this.Position.x, firstBarPos.y - this.borderSize),
-                        new Vector(Engine.playableArea.Max.x - this.Position.x, firstBarPos.y + this.borderSize),
-                        new Vector(Engine.playableArea.Min.x - this.Position.x, firstBarPos.y + this.borderSize),
+                        new Vector(Engine.playableArea.Min.x - Position.x, firstBarPos.y - borderSize),
+                        new Vector(Engine.playableArea.Max.x - Position.x, firstBarPos.y - borderSize),
+                        new Vector(Engine.playableArea.Max.x - Position.x, firstBarPos.y + borderSize),
+                        new Vector(Engine.playableArea.Min.x - Position.x, firstBarPos.y + borderSize),
                     },
                     new Color(109, 10, 208, 255),
                     new Color(234, 234, 234, 255)
@@ -109,10 +110,10 @@ namespace Ultimate_Tic_Tac_Toe.Game
                 new DrawObject(
                     new List<Vector>
                     {
-                new Vector(Engine.playableArea.Min.x - this.Position.x, secondBarPos.y - this.borderSize),
-                new Vector(Engine.playableArea.Max.x - this.Position.x, secondBarPos.y - this.borderSize),
-                new Vector(Engine.playableArea.Max.x - this.Position.x, secondBarPos.y + this.borderSize),
-                new Vector(Engine.playableArea.Min.x - this.Position.x, secondBarPos.y + this.borderSize),
+                new Vector(Engine.playableArea.Min.x - Position.x, secondBarPos.y - borderSize),
+                new Vector(Engine.playableArea.Max.x - Position.x, secondBarPos.y - borderSize),
+                new Vector(Engine.playableArea.Max.x - Position.x, secondBarPos.y + borderSize),
+                new Vector(Engine.playableArea.Min.x - Position.x, secondBarPos.y + borderSize),
                     },
                     new Color(109, 10, 208, 255),
                     new Color(234, 234, 234, 255)

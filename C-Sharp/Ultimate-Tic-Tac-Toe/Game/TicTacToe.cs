@@ -31,6 +31,11 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
         }
 
+        public void SetAIActive(bool aiState)
+        {
+            aiActive = aiState;
+        }
+
         public override void Update()
         {
             if (!aiActive)

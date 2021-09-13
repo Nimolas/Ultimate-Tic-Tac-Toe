@@ -43,9 +43,15 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
                     var maxY = minY + yThird;
 
-                    var cellPos = new Vector((minX + maxX) / 2, (minY + maxX) / 2);
+                    var cellPos = new Vector(
+                        (minX + maxX) / 2,
+                        (minY + maxY) / 2
+                    );
 
-                    var boundary = new MinMax(new Vector(minX, minY), new Vector(maxX, maxY));
+                    var boundary = new MinMax(
+                        new Vector(minX, minY),
+                        new Vector(maxX, maxY)
+                    );
 
                     var cell = new Cell(cellPos, boundary, gameObjects);
                     gameObjects.Add(cell);
@@ -54,6 +60,16 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
 
             SetDrawObject(GenerateDrawObject(xThird, yThird));
+        }
+
+        public List<List<Cell>> GetGridCells()
+        {
+            return cells;
+        }
+
+        public void SetCurrentPlayer(string activePlayer)
+        {
+            currentActivePlayer = activePlayer;
         }
 
         List<DrawObject> GenerateDrawObject(double xThird, double yThird)
@@ -196,7 +212,8 @@ namespace Ultimate_Tic_Tac_Toe.Game
                                 {
                                     cells.ElementAt(result.nodeX).ElementAt(result.nodeY).active = true;
                                 }
-                                else ActivateAllNonCompletedCells();
+                                else
+                                    ActivateAllNonCompletedCells();
 
                                 return true;
                             }
@@ -207,7 +224,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return false;
         }
 
-        void CheckWinCondition()
+        public void CheckWinCondition()
         {
             for (var xIndex = 0; xIndex < 3; xIndex++)
             {

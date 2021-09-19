@@ -14,6 +14,13 @@ namespace Ultimate_Tic_Tac_Toe.Game
         internal int x;
         internal int y;
         internal string drawType;
+
+        internal AINode(int x, int y, string drawType)
+        {
+            this.x = x;
+            this.y = y;
+            this.drawType = drawType;
+        }
     }
 
     internal struct AICell
@@ -24,6 +31,16 @@ namespace Ultimate_Tic_Tac_Toe.Game
         internal bool completed;
         internal string drawType;
         internal List<List<AINode>> nodes;
+
+        internal AICell(int x, int y, bool active, bool completed, string drawType, List<List<AINode>> nodes)
+        {
+            this.x = x;
+            this.y = y;
+            this.active = active;
+            this.completed = completed;
+            this.drawType = drawType;
+            this.nodes = nodes;
+        }
     }
 
     internal struct AIGrid
@@ -55,6 +72,18 @@ namespace Ultimate_Tic_Tac_Toe.Game
         }
     }
 
+    internal struct ActiveCell
+    {
+        internal int nodeX;
+        internal int nodeY;
+
+        internal ActiveCell(int nodeX, int nodeY)
+        {
+            this.nodeX = nodeX;
+            this.nodeY = nodeY;
+        }
+    }
+
     class AI
     {
         DecisionNode decisions;
@@ -76,7 +105,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                 yield return null;
             }
 
-            decisions.futureMoves.Add(new DecisionNode(ConvertGridToAIGrid(), 0, 0, new List<DecisionNode>(), 0, 0, 0, 0));
+            decisions.futureMoves.Add(new DecisionNode(ConvertGridToAIGrid(gridState), 0, 0, new List<DecisionNode>(), 0, 0, 0, 0));
 
             while (!(game.gameObjects.Last() as Grid).completed)
             {
@@ -217,6 +246,90 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
 
             return similarNodes == 81 ? true : false;
+        }
+
+        AIGrid ConvertGridToAIGrid(Grid gridState)
+        {
+            var grid = new AIGrid();
+            grid.cells = new List<List<AICell>>();
+
+            for (var cellX = 0; cellX < 3; cellX++)
+            {
+                grid.cells.Add(new List<AICell>());
+                for (var cellY = 0; cellY < 3; cellY++)
+                {
+                    var gridStateCell = gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY);
+                    grid.cells.ElementAt(cellX).Add(new AICell(cellX, cellY, gridStateCell.active, gridState.completed, gridStateCell.drawType, new List<List<AINode>>()));
+
+                    for (var nodeX = 0; nodeX < 3; nodeX++)
+                    {
+                        grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.Add(new List<AINode>());
+                        for (var nodeY = 0; nodeY < 3; nodeY++)
+                        {
+                            var gridStateNode = gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).GetCellNodes().ElementAt(nodeX).ElementAt(nodeY);
+
+                            grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).Add(new AINode(nodeX, nodeY, gridStateNode.drawType));
+                        }
+                    }
+                }
+            }
+
+            return grid;
+        }
+
+        AIGrid CreateNewAIGrid()
+        {
+            var grid = new AIGrid();
+            grid.cells = new List<List<AICell>>();
+
+            for (var cellX = 0; cellX < 3; cellX++)
+            {
+                grid.cells.Add(new List<AICell>());
+                for (var cellY = 0; cellY < 3; cellY++)
+                {
+                    grid.cells.ElementAt(cellX).Add(new AICell(cellX, cellY, true, false, "", new List<List<AINode>>()));
+
+                    for (var nodeX = 0; nodeX < 3; nodeX++)
+                    {
+                        grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.Add(new List<AINode>());
+                        for (var nodeY = 0; nodeY < 3; nodeY++)
+                        {
+                            grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).Add(new AINode(nodeX, nodeY, ""));
+                        }
+                    }
+                }
+            }
+
+            return grid;
+        }
+
+        List<ActiveCell> CalculateActiveCells(AIGrid gridState)
+        {
+            var activeCells = new List<ActiveCell>();
+
+            for (var cellX = 0; cellX < 3; cellX++)
+            {
+                for (var cellY = 0; cellY < 3; cellY++)
+                {
+                    if (gridState.cells.ElementAt(cellX).ElementAt(cellY).active == true)
+                    {
+                        activeCells.Add(new ActiveCell(cellX, cellY));
+                    }
+                }
+            }
+
+            return activeCells;
+        }
+
+        List<DecisionNode> CalculateMoves(string playerType, int currentMoveDepth, int maxMoveDepth, AIGrid gridState)
+        {
+            var activeCells = new List<ActiveCell>();
+            var decisions = new List<DecisionNode>();
+
+            if (currentMoveDepth < maxMoveDepth)
+            {
+                activeCells = CalculateActiveCells(gridState);
+            }
         }
     }
 }

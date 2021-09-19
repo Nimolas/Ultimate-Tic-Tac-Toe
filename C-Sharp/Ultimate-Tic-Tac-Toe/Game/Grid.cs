@@ -62,12 +62,12 @@ namespace Ultimate_Tic_Tac_Toe.Game
             SetDrawObject(GenerateDrawObject(xThird, yThird));
         }
 
-        public List<List<Cell>> GetGridCells()
+        internal List<List<Cell>> GetGridCells()
         {
             return cells;
         }
 
-        public void SetCurrentPlayer(string activePlayer)
+        internal void SetCurrentPlayer(string activePlayer)
         {
             currentActivePlayer = activePlayer;
         }
@@ -224,7 +224,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return false;
         }
 
-        public void CheckWinCondition()
+        internal void CheckWinCondition()
         {
             for (var xIndex = 0; xIndex < 3; xIndex++)
             {

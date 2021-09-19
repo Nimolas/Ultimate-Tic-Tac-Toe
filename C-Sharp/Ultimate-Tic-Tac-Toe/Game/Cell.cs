@@ -80,6 +80,11 @@ namespace Ultimate_Tic_Tac_Toe.Game
             SetDrawObject(GenerateDrawObject(minMax));
         }
 
+        internal List<List<Node>> GetCellNodes()
+        {
+            return nodes;
+        }
+
         List<DrawObject> GenerateDrawObject(MinMax minMax)
         {
             var xThird = (minMax.Max.x - minMax.Min.x) / 3;

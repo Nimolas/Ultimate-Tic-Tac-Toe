@@ -9,40 +9,40 @@ using Ventillo;
 
 namespace Ultimate_Tic_Tac_Toe.Game
 {
-    struct AINode
+    internal struct AINode
     {
-        int x;
-        int y;
-        string drawType;
+        internal int x;
+        internal int y;
+        internal string drawType;
     }
 
-    struct AICell
+    internal struct AICell
     {
-        int x;
-        int y;
-        bool active;
-        bool completed;
-        string drawType;
-        List<List<AINode>> nodes;
+        internal int x;
+        internal int y;
+        internal bool active;
+        internal bool completed;
+        internal string drawType;
+        internal List<List<AINode>> nodes;
     }
 
-    struct AIGrid
+    internal struct AIGrid
     {
-        List<List<AICell>> cells;
+        internal List<List<AICell>> cells;
     }
 
     struct DecisionNode
     {
-        public AIGrid grid;
-        public int winWeight;
-        public int winDepth;
-        public List<DecisionNode>? futureMoves;
-        public int cellX;
-        public int cellY;
-        public int nodeX;
-        public int nodeY;
+        internal AIGrid grid;
+        internal int winWeight;
+        internal int winDepth;
+        internal List<DecisionNode>? futureMoves;
+        internal int cellX;
+        internal int cellY;
+        internal int nodeX;
+        internal int nodeY;
 
-        public DecisionNode(AIGrid grid, int winWeight, int winDepth, List<DecisionNode>? futureMoves, int cellX, int cellY, int nodeX, int nodeY)
+        internal DecisionNode(AIGrid grid, int winWeight, int winDepth, List<DecisionNode>? futureMoves, int cellX, int cellY, int nodeX, int nodeY)
         {
             this.grid = grid;
             this.winWeight = winWeight;
@@ -66,7 +66,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             this.playerType = playerType;
         }
 
-        IEnumerator Start(Grid gridState, TicTacToe game
+        IEnumerator Start(Grid gridState, TicTacToe game)
         {
             var rand = new Random();
             decisions = new DecisionNode(CreateNewAIGrid(), 0, 0, new List<DecisionNode>(), 0, 0, 0, 0);
@@ -151,7 +151,72 @@ namespace Ultimate_Tic_Tac_Toe.Game
                 }
                 yield return null;
             }
+        }
 
+        internal void Update()
+        {
+            aiTurn = true;
+        }
+
+        void ApplyAIMoveToGrid(Grid gridState)
+        {
+            for (var cellX = 0; cellX < 3; cellX++)
+            {
+                for (var cellY = 0; cellY < 3; cellY++)
+                {
+                    var cell = gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY);
+                    cell.active = decisions.grid.cells.ElementAt(cellX).ElementAt(cellY).active;
+                    cell.drawType = decisions.grid.cells.ElementAt(cellX).ElementAt(cellY).drawType;
+
+                    for (var nodeX = 0; nodeX < 3; nodeX++)
+                    {
+                        for (var nodeY = 0; nodeY < 3; nodeY++)
+                        {
+                            var node = gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).GetCellNodes().ElementAt(nodeX).ElementAt(nodeY);
+                            node.drawType = decisions.grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).ElementAt(nodeY).drawType;
+
+                            gridState.GetGridCells()[cellX][cellY].GetCellNodes()[nodeX][nodeY] = node;
+                        }
+                    }
+
+                    gridState.GetGridCells()[cellX][cellY] = cell;
+                }
+            }
+        }
+
+        bool CompareGridStates(Grid gridState, DecisionNode move)
+        {
+            var similarNodes = 0;
+
+            for (var cellX = 0; cellX < 3; cellX++)
+            {
+                for (var cellY = 0; cellY < 3; cellY++)
+                {
+                    var gridStateCell = gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY);
+                    var moveCell = move.grid.cells.ElementAt(cellX).ElementAt(cellY);
+
+                    if (gridStateCell.active == moveCell.active &&
+                        gridStateCell.completed == moveCell.completed &&
+                        gridStateCell.drawType == moveCell.drawType)
+                    {
+                        for (var nodeX = 0; nodeX < 3; nodeX++)
+                        {
+                            for (var nodeY = 0; nodeY < 3; nodeY++)
+                            {
+                                var gridStateNode = gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).GetCellNodes().ElementAt(nodeX).ElementAt(nodeY);
+                                var moveNode = move.grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).ElementAt(nodeY);
+
+                                if (gridStateNode.drawType == moveNode.drawType)
+                                {
+                                    similarNodes++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return similarNodes == 81 ? true : false;
         }
     }
 }

@@ -90,12 +90,12 @@ namespace Ultimate_Tic_Tac_Toe.Game
         string playerType = "";
         bool aiTurn = false;
 
-        AI(string playerType)
+        internal AI(string playerType)
         {
             this.playerType = playerType;
         }
 
-        IEnumerator Start(Grid gridState, TicTacToe game)
+        internal IEnumerator Start(Grid gridState, TicTacToe game)
         {
             var rand = new Random();
             decisions = new DecisionNode(CreateNewAIGrid(), 0, 0, new List<DecisionNode>(), 0, 0, 0, 0);
@@ -107,7 +107,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
             decisions.futureMoves.Add(new DecisionNode(ConvertGridToAIGrid(gridState), 0, 0, new List<DecisionNode>(), 0, 0, 0, 0));
 
-            while (!(game.gameObjects.Last() as Grid).completed)
+            while (!gridState.completed)
             {
                 if (aiTurn)
                 {

@@ -12,13 +12,16 @@ namespace Ultimate_Tic_Tac_Toe.Game
 {
     internal class TicTacToe : IGame
     {
-        AI aI;
+        AI ai;
         bool aiActive = false;
         internal TicTacToe()
         {
             Engine.SetWindowTitle("Ultimate Tic Tac Toe");
 
             gameObjects.Add(new Grid(new Vector(Engine.playableArea.Max.x / 2, Engine.playableArea.Max.y / 2), gameObjects));
+
+            ai = new AI("Naught");
+            Engine.StartCoRoutine(ai.Start(gameObjects.Last() as Grid, this));
         }
 
         ~TicTacToe()
@@ -45,7 +48,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                     if (gameObject is Grid)
                     {
                         var gridObject = gameObject as Grid;
-                        gridObject.Update(aiActive);
+                        aiActive = gridObject.Update(aiActive);
                     }
                     else
                     {
@@ -53,10 +56,10 @@ namespace Ultimate_Tic_Tac_Toe.Game
                     }
                 }
             }
-            // else
-            // {
-            //     this.aI.Update();
-            // }
+            else
+            {
+                this.ai.Update();
+            }
 
             CheckDelete();
         }

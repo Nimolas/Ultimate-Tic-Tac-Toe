@@ -115,7 +115,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
                     var found = false;
                     var count = 0;
-                    DecisionNode playerMove;
+                    DecisionNode playerMove = new DecisionNode();
 
                     while (!found && count < decisions.futureMoves.Count)
                     {
@@ -152,7 +152,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
                     if (decisions.futureMoves.Count == 0)
                     {
-                        decisions.futureMoves = CalculateMoves(this.playerType == "Naught" ? "Cross" : "Naught", 5, decisions.grid);
+                        decisions.futureMoves = CalculateMoves(playerType == "Naught" ? "Cross" : "Naught", 0, 5, decisions.grid);
                     }
 
                     ApplyAIMoveToGrid(gridState);
@@ -164,11 +164,11 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
                     if (playerType == "Cross")
                     {
-                        gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).ElementAt(nodeY).setDrawObjectAI("Cross");
+                        gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).ElementAt(nodeY).SetDrawObjectAI("Cross");
                     }
                     else
                     {
-                        gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).ElementAt(nodeY).setDrawObjectAI("Naught");
+                        gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).ElementAt(nodeY).SetDrawObjectAI("Naught");
                     }
 
                     gridState.CheckWinCondition();
@@ -329,7 +329,301 @@ namespace Ultimate_Tic_Tac_Toe.Game
             if (currentMoveDepth < maxMoveDepth)
             {
                 activeCells = CalculateActiveCells(gridState);
+
+                foreach (var activecell in activeCells)
+                {
+                    for (var x = 0; x < 3; x++)
+                    {
+                        for (var y = 0; y < 3; y++)
+                        {
+                            var gridCopy = CopyBoardState(gridState);
+
+                            if (SetNodeForAI(gridCopy, activecell.nodeX, activecell.nodeY, x, y, playerType))
+                            {
+                                decisions.Add(new DecisionNode(
+                                    CopyBoardState(gridCopy),
+                                    0,
+                                    0,
+                                    new List<DecisionNode>(),
+                                    activecell.nodeX,
+                                    activecell.nodeY,
+                                    x,
+                                    y));
+
+                                if (CheckWinGrid(gridCopy.cells, playerType))
+                                {
+                                    var lastDecision = decisions.Last();
+                                    lastDecision.grid = CopyBoardState(gridCopy);
+                                    lastDecision.winWeight += 2;
+                                    lastDecision.winDepth += 1;
+                                    decisions[decisions.Count - 1] = lastDecision;
+                                    return decisions;
+                                }
+                                else if (CheckWinGrid(gridCopy.cells, this.playerType == "Naught" ? "Cross" : playerType))
+                                {
+                                    var lastDecision = decisions.Last();
+                                    lastDecision.grid = CopyBoardState(gridCopy);
+                                    lastDecision.winWeight -= 2;
+                                    decisions[decisions.Count - 1] = lastDecision;
+                                    return decisions;
+                                }
+                                else if (CheckDraw(gridCopy.cells))
+                                {
+                                    var lastDecision = decisions.Last();
+                                    lastDecision.grid = CopyBoardState(gridCopy);
+                                    lastDecision.winWeight += 1;
+                                    lastDecision.winDepth += 1;
+                                    decisions[decisions.Count - 1] = lastDecision;
+                                    return decisions;
+                                }
+                                else
+                                {
+                                    var newGrid = CopyBoardState(gridCopy);
+                                    var playerMove = playerType == "Naught" ? "Cross" : "Naught";
+                                    var lastDecision = decisions.Last();
+                                    lastDecision.futureMoves = CalculateMoves(playerMove, currentMoveDepth + 1, maxMoveDepth, newGrid);
+
+                                    if (lastDecision.futureMoves.Exists(futureMove => futureMove.winDepth > 0))
+                                    {
+                                        var winningMoves = lastDecision.futureMoves.FindAll(futureMove => futureMove.winDepth > 0);
+                                        var quickestWin = winningMoves.OrderBy(futureMove => futureMove.winDepth).ToList()[0].winDepth;
+
+                                        lastDecision.winDepth = quickestWin + 1;
+                                    }
+
+                                    foreach (var futureMove in lastDecision.futureMoves)
+                                    {
+                                        lastDecision.winWeight += futureMove.winWeight;
+                                    }
+
+                                    decisions[decisions.Count - 1] = lastDecision;
+                                }
+                            }
+                        }
+                    }
+                }
             }
+
+            return decisions;
+        }
+
+        bool CheckDraw(List<List<AICell>> gridObjects)
+        {
+            var completedCells = 0;
+
+            foreach (var gridObject in gridObjects)
+            {
+                foreach (var cell in gridObject)
+                {
+                    if (cell.completed) completedCells++;
+                }
+            }
+
+            if (completedCells == 9) return true; else return false;
+        }
+
+        bool SetDrawType(AINode node, string currentActivePlayer)
+        {
+            if (node.drawType == "")
+            {
+                node.drawType = currentActivePlayer;
+                return true;
+            }
+            return false;
+        }
+
+        bool CheckWinCell(AICell cell, List<List<AINode>> nodeObjects, string playerType)
+        {
+            for (var x = 0; x < 3; x++)
+            {
+                if (nodeObjects[x][0].drawType == playerType &&
+                    nodeObjects[x][1].drawType == playerType &&
+                    nodeObjects[x][2].drawType == playerType)
+                {
+                    cell.drawType = playerType;
+                    return true;
+                }
+            }
+
+            for (var y = 0; y < 3; y++)
+            {
+                if (nodeObjects[0][y].drawType == playerType &&
+                    nodeObjects[1][y].drawType == playerType &&
+                    nodeObjects[2][y].drawType == playerType)
+                {
+                    cell.drawType = playerType;
+                    return true;
+                }
+            }
+
+            if (nodeObjects[0][0].drawType == playerType &&
+                nodeObjects[1][1].drawType == playerType &&
+                nodeObjects[2][2].drawType == playerType)
+            {
+                cell.drawType = playerType;
+                return true;
+            }
+
+            if (nodeObjects[0][2].drawType == playerType &&
+                nodeObjects[1][1].drawType == playerType &&
+                nodeObjects[2][0].drawType == playerType)
+            {
+                cell.drawType = playerType;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool CheckWinGrid(List<List<AICell>> cellObjects, string playerType)
+        {
+            for (var x = 0; x < 3; x++)
+            {
+                if (cellObjects[x][0].drawType == playerType &&
+                    cellObjects[x][1].drawType == playerType &&
+                    cellObjects[x][2].drawType == playerType)
+                {
+                    return true;
+                }
+            }
+
+            for (var y = 0; y < 3; y++)
+            {
+                if (cellObjects[0][y].drawType == playerType &&
+                    cellObjects[1][y].drawType == playerType &&
+                    cellObjects[2][y].drawType == playerType)
+                {
+                    return true;
+                }
+            }
+
+            if (cellObjects[0][0].drawType == playerType &&
+                cellObjects[1][1].drawType == playerType &&
+                cellObjects[2][2].drawType == playerType)
+            {
+                return true;
+            }
+
+            if (cellObjects[0][2].drawType == playerType &&
+                cellObjects[1][1].drawType == playerType &&
+                cellObjects[2][0].drawType == playerType)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        bool CheckWinState(AICell cell, List<List<AINode>> nodeObjects)
+        {
+            if (!cell.completed)
+            {
+                if (CheckWinCell(cell, nodeObjects, "Naught") || CheckWinCell(cell, nodeObjects, "Cross"))
+                {
+                    cell.completed = true;
+                    cell.active = false;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        PickedNode SetDrawTypeForAI(AICell cell, List<List<AINode>> nodes, int xIndex, int yIndex, string currentActivePlayer)
+        {
+            var pickedNode = new PickedNode(xIndex, yIndex, false);
+
+            if (SetDrawType(nodes.ElementAt(xIndex).ElementAt(yIndex), currentActivePlayer))
+            {
+                CheckWinState(cell, nodes);
+                pickedNode.picked = true;
+            }
+
+            return pickedNode;
+        }
+
+        void DisableAllCells(List<List<AICell>> aiCells)
+        {
+            for (var xIndex = 0; xIndex < 3; xIndex++)
+            {
+                for (var yIndex = 0; yIndex < 3; yIndex++)
+                {
+                    var cell = aiCells.ElementAt(xIndex).ElementAt(yIndex);
+                    cell.active = false;
+                    aiCells[xIndex][yIndex] = cell;
+                }
+            }
+        }
+
+        void ActivateAllNonCompletedCells(List<List<AICell>> aiCells)
+        {
+            for (var xIndex = 0; xIndex < 3; xIndex++)
+            {
+                for (var yIndex = 0; yIndex < 3; yIndex++)
+                {
+                    var cell = aiCells.ElementAt(xIndex).ElementAt(yIndex);
+                    if (!cell.completed)
+                    {
+                        cell.active = true;
+                    }
+                    aiCells[xIndex][yIndex] = cell;
+                }
+            }
+        }
+
+        bool SetNodeForAI(AIGrid grid, int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
+        {
+            var cell = grid.cells.ElementAt(xCellIndex).ElementAt(yCellIndex);
+            var result = SetDrawTypeForAI(cell, cell.nodes, xNodeIndex, yNodeIndex, currentPlayer);
+
+            if (result.picked)
+            {
+                DisableAllCells(grid.cells);
+                var node = grid.cells.ElementAt(result.nodeX).ElementAt(result.nodeY);
+                if (!node.completed)
+                {
+                    node.active = true;
+                    grid.cells[result.nodeX][result.nodeY] = node;
+                }
+                else
+                    ActivateAllNonCompletedCells(grid.cells);
+                return true;
+            }
+            return false;
+        }
+
+        AIGrid CopyBoardState(AIGrid gridState)
+        {
+            var newGrid = CreateNewAIGrid();
+
+            for (var xCell = 0; xCell < 3; xCell++)
+            {
+                for (var yCell = 0; yCell < 3; yCell++)
+                {
+                    var newCell = newGrid.cells.ElementAt(xCell).ElementAt(yCell);
+                    var gridStateCell = gridState.cells.ElementAt(xCell).ElementAt(yCell);
+
+                    newCell.drawType = gridStateCell.drawType;
+                    newCell.completed = gridStateCell.completed;
+                    newCell.active = gridStateCell.active;
+
+                    for (var xNode = 0; xNode < 3; xNode++)
+                    {
+                        for (var yNode = 0; yNode < 3; yNode++)
+                        {
+                            var newNode = newCell.nodes.ElementAt(xNode).ElementAt(yNode);
+                            var gridStateNode = gridStateCell.nodes.ElementAt(xNode).ElementAt(yNode);
+
+                            newNode.drawType = gridStateNode.drawType;
+
+                            newCell.nodes[xNode][yNode] = newNode;
+                        }
+                    }
+
+                    newGrid.cells[xCell][yCell] = newCell;
+                }
+            }
+
+            return newGrid;
         }
     }
 }

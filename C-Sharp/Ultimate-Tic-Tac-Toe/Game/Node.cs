@@ -111,7 +111,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return drawObjects;
         }
 
-        void SetDrawObjectAI(string playerType)
+        internal void SetDrawObjectAI(string playerType)
         {
             if (playerType == "Cross")
             {

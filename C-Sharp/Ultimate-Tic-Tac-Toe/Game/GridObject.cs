@@ -135,18 +135,18 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return false;
         }
 
-        bool CheckDraw(List<List<GridObject>> gridObjects)
-        {
-            var completedCells = 0;
+        //bool CheckDraw(List<List<GridObject>> gridObjects)
+        //{
+        //    var completedCells = 0;
 
-            foreach (var gridObject in gridObjects)
-                foreach (var cell in gridObject)
-                    if (cell.completed) completedCells++;
+        //    foreach (var gridObject in gridObjects)
+        //        foreach (var cell in gridObject)
+        //            if (cell.completed) completedCells++;
 
-            if (completedCells == 9)
-                return true;
-            return false;
-        }
+        //    if (completedCells == 9)
+        //        return true;
+        //    return false;
+        //}
 
         internal bool CheckWinState<T>(List<List<T>> gridObjects) where T : GridObject
         {

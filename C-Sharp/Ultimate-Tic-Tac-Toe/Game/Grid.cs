@@ -173,23 +173,23 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
         }
 
-        bool SetNodeForAI(int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
-        {
-            var result = cells.ElementAt(xCellIndex).ElementAt(yCellIndex).SetDrawTypeForAI(xNodeIndex, yNodeIndex, currentPlayer);
+        //bool SetNodeForAI(int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
+        //{
+        //    var result = cells.ElementAt(xCellIndex).ElementAt(yCellIndex).SetDrawTypeForAI(xNodeIndex, yNodeIndex, currentPlayer);
 
-            if (result.picked)
-            {
-                DisableAllCells();
-                if (!cells.ElementAt(result.nodeX).ElementAt(result.nodeY).completed)
-                {
-                    cells.ElementAt(result.nodeX).ElementAt(result.nodeY).active = true;
-                }
-                else ActivateAllNonCompletedCells();
+        //    if (result.picked)
+        //    {
+        //        DisableAllCells();
+        //        if (!cells.ElementAt(result.nodeX).ElementAt(result.nodeY).completed)
+        //        {
+        //            cells.ElementAt(result.nodeX).ElementAt(result.nodeY).active = true;
+        //        }
+        //        else ActivateAllNonCompletedCells();
 
-                return true;
-            }
-            return false;
-        }
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         bool HandleMouseEvents()
         {

@@ -111,7 +111,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             {
                 if (aiTurn)
                 {
-                    Engine.WaitForSeconds(rand.Next(1, 3));
+                    yield return Engine.WaitForSeconds(rand.Next(1, 3));
 
                     var found = false;
                     var count = 0;
@@ -250,8 +250,10 @@ namespace Ultimate_Tic_Tac_Toe.Game
 
         AIGrid ConvertGridToAIGrid(Grid gridState)
         {
-            var grid = new AIGrid();
-            grid.cells = new List<List<AICell>>();
+            var grid = new AIGrid
+            {
+                cells = new List<List<AICell>>()
+            };
 
             for (var cellX = 0; cellX < 3; cellX++)
             {
@@ -266,7 +268,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                         grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.Add(new List<AINode>());
                         for (var nodeY = 0; nodeY < 3; nodeY++)
                         {
-                            var gridStateNode = gridState.GetGridCells().ElementAt(cellX).ElementAt(cellY).GetCellNodes().ElementAt(nodeX).ElementAt(nodeY);
+                            var gridStateNode = gridStateCell.GetCellNodes().ElementAt(nodeX).ElementAt(nodeY);
 
                             grid.cells.ElementAt(cellX).ElementAt(cellY).nodes.ElementAt(nodeX).Add(new AINode(nodeX, nodeY, gridStateNode.drawType));
                         }
@@ -321,7 +323,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return activeCells;
         }
 
-        List<DecisionNode> CalculateMoves(string playerType, int currentMoveDepth, int maxMoveDepth, AIGrid gridState)
+        List<DecisionNode> CalculateMoves(string currentPlayerType, int currentMoveDepth, int maxMoveDepth, AIGrid gridState)
         {
             var activeCells = new List<ActiveCell>();
             var decisions = new List<DecisionNode>();
@@ -338,7 +340,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                         {
                             var gridCopy = CopyBoardState(gridState);
 
-                            if (SetNodeForAI(gridCopy, activecell.nodeX, activecell.nodeY, x, y, playerType))
+                            if (SetNodeForAI(ref gridCopy, activecell.nodeX, activecell.nodeY, x, y, currentPlayerType))
                             {
                                 decisions.Add(new DecisionNode(
                                     CopyBoardState(gridCopy),
@@ -350,7 +352,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                                     x,
                                     y));
 
-                                if (CheckWinGrid(gridCopy.cells, playerType))
+                                if (CheckWinGrid(gridCopy.cells, currentPlayerType))
                                 {
                                     var lastDecision = decisions.Last();
                                     lastDecision.grid = CopyBoardState(gridCopy);
@@ -359,7 +361,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                                     decisions[decisions.Count - 1] = lastDecision;
                                     return decisions;
                                 }
-                                else if (CheckWinGrid(gridCopy.cells, this.playerType == "Naught" ? "Cross" : playerType))
+                                else if (CheckWinGrid(gridCopy.cells, this.playerType == "Naught" ? "Cross" : currentPlayerType))
                                 {
                                     var lastDecision = decisions.Last();
                                     lastDecision.grid = CopyBoardState(gridCopy);
@@ -379,7 +381,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
                                 else
                                 {
                                     var newGrid = CopyBoardState(gridCopy);
-                                    var playerMove = playerType == "Naught" ? "Cross" : "Naught";
+                                    var playerMove = currentPlayerType == "Naught" ? "Cross" : "Naught";
                                     var lastDecision = decisions.Last();
                                     lastDecision.futureMoves = CalculateMoves(playerMove, currentMoveDepth + 1, maxMoveDepth, newGrid);
 
@@ -422,7 +424,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             if (completedCells == 9) return true; else return false;
         }
 
-        bool SetDrawType(AINode node, string currentActivePlayer)
+        bool SetDrawType(ref AINode node, string currentActivePlayer)
         {
             if (node.drawType == "")
             {
@@ -432,7 +434,7 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return false;
         }
 
-        bool CheckWinCell(AICell cell, List<List<AINode>> nodeObjects, string playerType)
+        bool CheckWinCell(ref AICell cell, List<List<AINode>> nodeObjects, string playerType)
         {
             for (var x = 0; x < 3; x++)
             {
@@ -514,11 +516,11 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return false;
         }
 
-        bool CheckWinState(AICell cell, List<List<AINode>> nodeObjects)
+        bool CheckWinState(ref AICell cell, List<List<AINode>> nodeObjects)
         {
             if (!cell.completed)
             {
-                if (CheckWinCell(cell, nodeObjects, "Naught") || CheckWinCell(cell, nodeObjects, "Cross"))
+                if (CheckWinCell(ref cell, nodeObjects, "Naught") || CheckWinCell(ref cell, nodeObjects, "Cross"))
                 {
                     cell.completed = true;
                     cell.active = false;
@@ -528,16 +530,18 @@ namespace Ultimate_Tic_Tac_Toe.Game
             return false;
         }
 
-        PickedNode SetDrawTypeForAI(AICell cell, List<List<AINode>> nodes, int xIndex, int yIndex, string currentActivePlayer)
+        PickedNode SetDrawTypeForAI(ref AICell cell, List<List<AINode>> nodes, int xIndex, int yIndex, string currentActivePlayer)
         {
             var pickedNode = new PickedNode(xIndex, yIndex, false);
+            var node = nodes.ElementAt(xIndex).ElementAt(yIndex);
 
-            if (SetDrawType(nodes.ElementAt(xIndex).ElementAt(yIndex), currentActivePlayer))
+            if (SetDrawType(ref node, currentActivePlayer))
             {
-                CheckWinState(cell, nodes);
+                CheckWinState(ref cell, nodes);
                 pickedNode.picked = true;
             }
 
+            nodes[xIndex][yIndex] = node;
             return pickedNode;
         }
 
@@ -570,19 +574,20 @@ namespace Ultimate_Tic_Tac_Toe.Game
             }
         }
 
-        bool SetNodeForAI(AIGrid grid, int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
+        bool SetNodeForAI(ref AIGrid grid, int xCellIndex, int yCellIndex, int xNodeIndex, int yNodeIndex, string currentPlayer)
         {
             var cell = grid.cells.ElementAt(xCellIndex).ElementAt(yCellIndex);
-            var result = SetDrawTypeForAI(cell, cell.nodes, xNodeIndex, yNodeIndex, currentPlayer);
+            var result = SetDrawTypeForAI(ref cell, cell.nodes, xNodeIndex, yNodeIndex, currentPlayer);
+            grid.cells[xCellIndex][yCellIndex] = cell;
 
             if (result.picked)
             {
                 DisableAllCells(grid.cells);
-                var node = grid.cells.ElementAt(result.nodeX).ElementAt(result.nodeY);
-                if (!node.completed)
+                var pickedCell = grid.cells.ElementAt(result.nodeX).ElementAt(result.nodeY);
+                if (!pickedCell.completed)
                 {
-                    node.active = true;
-                    grid.cells[result.nodeX][result.nodeY] = node;
+                    pickedCell.active = true;
+                    grid.cells[result.nodeX][result.nodeY] = pickedCell;
                 }
                 else
                     ActivateAllNonCompletedCells(grid.cells);

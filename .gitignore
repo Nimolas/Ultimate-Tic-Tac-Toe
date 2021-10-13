@@ -45,4 +45,4 @@ dist/**/*
 yarn.lock
 
 */obj/*
-*/bin/*
+**/bin/**
